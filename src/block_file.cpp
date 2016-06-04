@@ -41,8 +41,8 @@ BlockFile::BlockFile(char* file_name, int block_length) {
         //  Reinit <num_blocks_> (number of blocks in doc itself).
         // ---------------------------------------------------------------------
         new_flag_ = false;          // reinit <block_length_> by file
-        block_length_ = fread_number();
-        num_blocks_ = fread_number();
+        block_length_ = FreadNumber();
+        num_blocks_ = FreadNumber();
     } else {
         // ---------------------------------------------------------------------
         //  <file_name_> not exists. we construct new file and reinit paras.
@@ -70,8 +70,8 @@ BlockFile::BlockFile(char* file_name, int block_length) {
         //  Since the file is empty (new), <num_blocks_> is 0 (no blocks in it).
         // ---------------------------------------------------------------------
         new_flag_ = true;
-        fwrite_number(block_length_);
-        fwrite_number(0);
+        FwriteNumber(block_length_);
+        FwriteNumber(0);
 
         // ---------------------------------------------------------------------
         //  Since <block_length_> >= 8 bytes, for the remain bytes, we will 
@@ -111,13 +111,13 @@ BlockFile::~BlockFile() {
 
 // -----------------------------------------------------------------------------
 // write an <int> value to bin file
-void BlockFile::fwrite_number(int value) {
+void BlockFile::FwriteNumber(int value) {
     put_bytes((char *) &value, SIZEINT);
 }
 
 // -----------------------------------------------------------------------------
 // read an <int> value from bin file
-int BlockFile::fread_number() {
+int BlockFile::FreadNumber() {
     char ca[SIZEINT];
     get_bytes(ca, SIZEINT);
 
@@ -130,7 +130,7 @@ int BlockFile::fread_number() {
 // -----------------------------------------------------------------------------
 // read remain bytes excluding header
 // contain remain bytes (return)
-void BlockFile::read_header(char* buffer) {
+void BlockFile::ReadHeader(char* buffer) {
     // jump out of first 8 bytes
     fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
     // read remain bytes into <buffer>
@@ -155,7 +155,7 @@ void BlockFile::read_header(char* buffer) {
 // -----------------------------------------------------------------------------
 // set remain bytes excluding header
 // contain remain bytes
-void BlockFile::set_header(char* header) {
+void BlockFile::SetHeader(char* header) {
     // jump out of first 8 bytes
     fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
 
@@ -203,14 +203,14 @@ void BlockFile::set_header(char* header) {
 //  currently <act_block> = <index> + 1 = 2 + 1 = 3.
 // -----------------------------------------------------------------------------
 // read a <block> from <index>
-bool BlockFile::read_block(Block block,  int index) {
+bool BlockFile::ReadBlock(Block block,  int index) {
     index++; // extrnl block to intrnl block
 
     // move to the position
     if (index <= num_blocks_ && index > 0) {
         seek_block(index);
     } else {
-        printf("BlockFile::read_block request the block %d "
+        printf("BlockFile::ReadBlock request the block %d "
             "which is illegal.", index - 1);
         // error("\n", true);
     }
@@ -230,17 +230,17 @@ bool BlockFile::read_block(Block block,  int index) {
 // -----------------------------------------------------------------------------
 //  Note that this function can only write to an already "allocated" block (in 
 //  the range of <num_blocks>).
-//  If you allocate a new block, please use "append_block" instead.
+//  If you allocate a new block, please use "AppendBlock" instead.
 // -----------------------------------------------------------------------------
 // write a <block> into <index>
-bool BlockFile::write_block(Block block, int index) {
+bool BlockFile::WriteBlock(Block block, int index) {
     index++; // extrnl block to intrnl block
 
     // move to the position
     if (index <= num_blocks_ && index > 0) {
         seek_block(index);
     } else {
-        printf("BlockFile::write_block request the block %d "
+        printf("BlockFile::WriteBlock request the block %d "
             "which is illegal.", index - 1);
         // error("\n", true);
     }
@@ -262,13 +262,13 @@ bool BlockFile::write_block(Block block, int index) {
 //  The file pointer is pointed to the new appended block and return its pos.
 // -----------------------------------------------------------------------------
 // append new block at the end of file
-int BlockFile::append_block( Block block) {
+int BlockFile::AppendBlock( Block block) {
     fseek(fp_, 0, SEEK_END);        // <fp_> point to the end of file
     put_bytes(block, block_length_);// write a <block>
     num_blocks_++;                  // add 1 to <num_blocks_>
     
     fseek(fp_, SIZEINT, SEEK_SET);  // <fp_> point to pos of header
-    fwrite_number(num_blocks_);     // update <num_blocks_>
+    FwriteNumber(num_blocks_);     // update <num_blocks_>
 
     // -------------------------------------------------------------------------
     //  <fp_> point to the pos of new added block. 
@@ -288,14 +288,14 @@ int BlockFile::append_block( Block block) {
 //  not changed.
 // -----------------------------------------------------------------------------
 // delete last <num> blocks
-bool BlockFile::delete_last_blocks(int num) {
+bool BlockFile::DeleteLastBlocks(int num) {
     if (num > num_blocks_) {        // check whether illegal?
         return false;
     }
 
     num_blocks_ -= num;             // update <number>
     fseek(fp_, SIZEINT, SEEK_SET);
-    fwrite_number(num_blocks_);
+    FwriteNumber(num_blocks_);
 
     fseek(fp_, 0, SEEK_SET);        // <fp> point to beginning of file
     act_block_ = 0;                 // <act_block> = 0
