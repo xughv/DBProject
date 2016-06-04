@@ -32,53 +32,53 @@ public:
 
     // -------------------------------------------------------------------------
     // write <bytes> of length <num>
-    void put_bytes(char* bytes, int num) { fwrite(bytes, num, 1, fp_); }
+    void PutBytes(char* bytes, int num) { fwrite(bytes, num, 1, fp_); }
 
     // read <bytes> of length <num>
-    void get_bytes(char* bytes, int num) { fread(bytes, num, 1, fp_); }
+    void GetBytes(char* bytes, int num) { fread(bytes, num, 1, fp_); }
 
     // move <fp_> to the right with <bnum>
-    void seek_block(int bnum)
+    void SeekBlock(int bnum)
     { fseek(fp_, (bnum - act_block_) * block_length_, SEEK_CUR); }
 
     // -------------------------------------------------------------------------
     // whether this block is modified?
-    bool file_new() { return new_flag_; }
+    bool FileNew() { return new_flag_; }
 
     // get block length
-    int get_blocklength() { return block_length_; }
+    int GetBlocklength() { return block_length_; }
 
     // get number of blocks
-    int get_num_of_blocks() { return num_blocks_; }
+    int GetNumOfBlocks() { return num_blocks_; }
 
     // -------------------------------------------------------------------------
     // write a value <num> (type int)
-    void fwrite_number(int num);
+    void FwriteNumber(int num);
 
     // read a value (type int)
-    int fread_number();
+    int FreadNumber();
 
     // -------------------------------------------------------------------------
     // fetches info in the first block
     // <header> -- excluding the header of blk file
-    void read_header(char* header);       
+    void ReadHeader(char* header);       
 
     // writes the info in the first block
     // <header> -- excluding the header of blk file
-    void set_header( char* header);
+    void SetHeader( char* header);
 
     // -------------------------------------------------------------------------
     // read a block <b> in the <pos>
-    bool read_block(Block block, int index);
+    bool ReadBlock(Block block, int index);
 
     // write a block <b> in the <pos>
-    bool write_block(Block block, int index);
+    bool WriteBlock(Block block, int index);
 
     // append a block at the end of file
-    int append_block(Block block);
+    int AppendBlock(Block block);
 
     // delete last <num> blocks
-    bool delete_last_blocks(int num);
+    bool DeleteLastBlocks(int num);
 };
 
 #endif // _BLOCK_FILE_H_
