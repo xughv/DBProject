@@ -25,7 +25,7 @@ public:
 
     // -------------------------------------------------------------------------
     // constructor
-    BlockFile(char* file_name, int block_length);
+    BlockFile(char* file_name, int block_length = 0);
 
     // destructor
     ~BlockFile();                   
@@ -42,16 +42,6 @@ public:
     { fseek(fp_, (bnum - act_block_) * block_length_, SEEK_CUR); }
 
     // -------------------------------------------------------------------------
-    // whether this block is modified?
-    bool FileNew() { return new_flag_; }
-
-    // get block length
-    int GetBlocklength() { return block_length_; }
-
-    // get number of blocks
-    int GetNumOfBlocks() { return num_blocks_; }
-
-    // -------------------------------------------------------------------------
     // write a value <num> (type int)
     void FwriteNumber(int num);
 
@@ -65,7 +55,7 @@ public:
 
     // writes the info in the first block
     // <header> -- excluding the header of blk file
-    void SetHeader( char* header);
+    void SetHeader(char* header);
 
     // -------------------------------------------------------------------------
     // read a block <b> in the <pos>
@@ -79,6 +69,17 @@ public:
 
     // delete last <num> blocks
     bool DeleteLastBlocks(int num);
+
+    // -------------------------------------------------------------------------
+    // whether this block is modified?
+    bool IsNewFile() { return new_flag_; }
+
+    // get block length
+    int block_length() { return block_length_; }
+
+    // get number of blocks
+    int num_blocks() { return num_blocks_; }
+
 };
 
 #endif // _BLOCK_FILE_H_

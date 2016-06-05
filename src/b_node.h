@@ -1,9 +1,13 @@
 #ifndef _B_NODE_H
 #define _B_NODE_H
 
+#include "block_file.h"
+
+class BTree;
 // -----------------------------------------------------------------------------
 //  BNode: basic structure of node in B-tree
 // -----------------------------------------------------------------------------
+
 class BNode {
 public:
     // constructor
@@ -21,7 +25,7 @@ public:
     // load an exist node from disk to init
     // <btree> -- b-tree of this node
     // <block> -- address of file of this node
-    void InitRestore(BTree* btree, int block);
+    void InitFromFile(BTree* btree, int block);
 
     // -------------------------------------------------------------------------
     // read a b-node from buffer
@@ -39,15 +43,17 @@ public:
     // find pos just less than input key
     int FindPositionByKey(float key);
 
-    // get <key> indexed by <index>
+    // get <key_> indexed by <index>
     float GetKey(int index);
 
+    // get <son_> indexed by <index>
+    float GetSon(int index);
     // -------------------------------------------------------------------------
     // get header size in b-node
     int GetHeaderSize();
 
     // get key of this node
-    // float GetKeyOfNode();
+    float GetKeyOfNode();
 
     // whether is full?
     bool IsFull();
@@ -64,10 +70,10 @@ public:
     BNode* right_sibling();
 
     // set <left_sibling>
-    void set_left_sibling(int left_sibling);
+    void set_left_sibling(BNode* node);
 
     // set <right sibling>
-    void set_right_sibling(int right_sibling);
+    void set_right_sibling(BNode* node);
 
     // -------------------------------------------------------------------------
     // get <block_>

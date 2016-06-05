@@ -2,3 +2,9 @@
 data/Mnist.ds
 
 data/Mnist.q
+
+CMakeLists.txt
+
+*.iml
+
+*.xml
