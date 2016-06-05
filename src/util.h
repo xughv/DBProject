@@ -5,9 +5,9 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
+float Rand();
 
-void ReadSetFromFile(char* file_name, int num, int dim, float** datas);
-
+bool ReadSetFromFile(char* file_name, int &num, int &dim, float** datas);
 
 
 #endif // _UTIL_H_
