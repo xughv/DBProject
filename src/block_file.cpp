@@ -86,7 +86,7 @@ BlockFile::BlockFile(char* file_name, int block_length) {
 
         // set to 0 to remain bytes
         memset(buffer, 0, sizeof(buffer));
-        put_bytes(buffer, len);
+        PutBytes(buffer, len);
 
         delete[] buffer;
         buffer = NULL;
@@ -112,14 +112,14 @@ BlockFile::~BlockFile() {
 // -----------------------------------------------------------------------------
 // write an <int> value to bin file
 void BlockFile::FwriteNumber(int value) {
-    put_bytes((char *) &value, SIZEINT);
+    PutBytes((char *) &value, SIZEINT);
 }
 
 // -----------------------------------------------------------------------------
 // read an <int> value from bin file
 int BlockFile::FreadNumber() {
     char ca[SIZEINT];
-    get_bytes(ca, SIZEINT);
+    GetBytes(ca, SIZEINT);
 
     return *((int *)ca);
 }
@@ -134,7 +134,7 @@ void BlockFile::ReadHeader(char* buffer) {
     // jump out of first 8 bytes
     fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
     // read remain bytes into <buffer>
-    get_bytes(buffer, block_length_ - BFHEAD_LENGTH); 
+    GetBytes(buffer, block_length_ - BFHEAD_LENGTH); 
 
     if (num_blocks_ < 1) {          // no remain bytes
         fseek(fp_, 0, SEEK_SET);    // fp return to beginning pos
@@ -160,7 +160,7 @@ void BlockFile::SetHeader(char* header) {
     fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
 
     // write remain bytes into <buffer>
-    put_bytes(header, block_length_ - BFHEAD_LENGTH);
+    PutBytes(header, block_length_ - BFHEAD_LENGTH);
     
     if (num_blocks_ < 1) {          // no remain bytes
         fseek(fp_, 0, SEEK_SET);    // fp return to beginning pos
@@ -215,7 +215,7 @@ bool BlockFile::ReadBlock(Block block,  int index) {
         // error("\n", true);
     }
 
-    get_bytes(block, block_length_); // read the block
+    GetBytes(block, block_length_); // read the block
 
     // <fp_> reaches the end of file
     if (index + 1 > num_blocks_) {
@@ -245,7 +245,7 @@ bool BlockFile::WriteBlock(Block block, int index) {
         // error("\n", true);
     }
     
-    put_bytes(block, block_length_); // write this block
+    PutBytes(block, block_length_); // write this block
 
     // update <act_block_>
     if (index + 1 > num_blocks_) {
@@ -264,7 +264,7 @@ bool BlockFile::WriteBlock(Block block, int index) {
 // append new block at the end of file
 int BlockFile::AppendBlock( Block block) {
     fseek(fp_, 0, SEEK_END);        // <fp_> point to the end of file
-    put_bytes(block, block_length_);// write a <block>
+    PutBytes(block, block_length_);// write a <block>
     num_blocks_++;                  // add 1 to <num_blocks_>
     
     fseek(fp_, SIZEINT, SEEK_SET);  // <fp_> point to pos of header
