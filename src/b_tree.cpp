@@ -17,7 +17,15 @@ BTree::~BTree() {
     }
 
     if (file_ != NULL) {
-        char* header = new char[file_->]
+        char* header = new char[file_->block_length()];
+        WriteHeader(header);
+        file_->SetHeader(header);
+
+        delete[] header;
+        header = NULL;
+
+        delete file_;
+        file_ = NULL;
     }
 }
 
@@ -25,11 +33,29 @@ BTree::~BTree() {
 // init a new b-tree
 void BTree::Init(char* file_name, int block_length) {
 
+    FILE* file = fopen(file_name, "r");
+    if (file != NULL) {
+        fclose(file);
+        // [TODO] file is exist
+    }
+
+    file_ = new BlockFile(file_name, block_length);
+    root_ptr_ = new BNode();
+    root_ptr_->Init(0, this);
+
+    root_ = root_ptr_->block();
+
+    DeleteRoot();
 }
 
 // load an exist b-tree
 void BTree::InitRestore(char* file_name) {
 
+    FILE* file = fopen(file_name, "r");
+    if (file == NULL) {
+        // [TODO] file is not exist
+    }
+    fclose(file);
 }
 
 // -------------------------------------------------------------------------
