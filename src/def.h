@@ -12,9 +12,11 @@ typedef char Block[];
 #define MIN(a, b)   (((a) < (b)) ? (a) : (b))
 #define MAX(a, b)   (((a) > (b)) ? (a) : (b))
 
-#define SEEK_SET 0
-#define SEEK_CUR 1
-#define SEEK_END 2
+//#ifndef SEEK_SET
+//#define SEEK_SET 0
+//#define SEEK_CUR 1
+//#define SEEK_END 2
+//#endif	/* !SEEK_SET */
 
 // -----------------------------------------------------------------------------
 //  Constants
@@ -31,20 +33,21 @@ const long  MAXMEMORY = 1073741824; // max memory, 1 GB
 const int   MAXINT    = 2147483647; // max integer value
 const int   MININT    = -MAXINT;    // min integer value
 
-                                    // size of type <int>
+// size of type <int>
 const int   SIZEINT   = (int) sizeof(int);
-                                    // size of type <char>
+// size of type <char>
 const int   SIZECHAR  = (int) sizeof(char);
-                                    // size of type <float>
+// size of type <float>
 const int   SIZEFLOAT = (int) sizeof(float);
-                                    // size of type <bool>
+// size of type <bool>
 const int   SIZEBOOL  = (int) sizeof(bool);
 
-                                    // file header size
+// file header size
 const int   BFHEAD_LENGTH = (int) (sizeof(int) * 2);
-                                    // index size of leaf node
+// index size of leaf node
 const int   INDEX_SIZE_LEAF_NODE = 4096;
-const int   MAXK = 100;             // max top-k value
+// max top-k value
+const int   MAXK = 100;
 
 
 #endif

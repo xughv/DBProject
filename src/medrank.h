@@ -16,3 +16,17 @@ private:
     float projection_;                  // projection of the object
 };
 
+
+class MEDRANK {
+public:
+    // constructor
+    MEDRANK();
+    // destructor
+    ~MEDRANK();
+
+    // -------------------------------------------------------------------------
+    void Init();
+
+private:
+
+};

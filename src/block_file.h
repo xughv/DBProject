@@ -25,7 +25,7 @@ public:
 
     // -------------------------------------------------------------------------
     // constructor
-    BlockFile(char* file_name, int block_length);
+    BlockFile(char* file_name, int block_length = 0);
 
     // destructor
     ~BlockFile();                   

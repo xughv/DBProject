@@ -208,7 +208,7 @@ bool BlockFile::ReadBlock(Block block,  int index) {
 
     // move to the position
     if (index <= num_blocks_ && index > 0) {
-        seek_block(index);
+        SeekBlock(index);
     } else {
         printf("BlockFile::ReadBlock request the block %d "
             "which is illegal.", index - 1);
@@ -238,7 +238,7 @@ bool BlockFile::WriteBlock(Block block, int index) {
 
     // move to the position
     if (index <= num_blocks_ && index > 0) {
-        seek_block(index);
+        SeekBlock(index);
     } else {
         printf("BlockFile::WriteBlock request the block %d "
             "which is illegal.", index - 1);
@@ -262,7 +262,7 @@ bool BlockFile::WriteBlock(Block block, int index) {
 //  The file pointer is pointed to the new appended block and return its pos.
 // -----------------------------------------------------------------------------
 // append new block at the end of file
-int BlockFile::AppendBlock( Block block) {
+int BlockFile::AppendBlock(Block block) {
     fseek(fp_, 0, SEEK_END);        // <fp_> point to the end of file
     PutBytes(block, block_length_);// write a <block>
     num_blocks_++;                  // add 1 to <num_blocks_>

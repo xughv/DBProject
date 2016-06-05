@@ -1,0 +1,267 @@
+#include "b_node.h"
+#include <cstring>
+
+#include "b_tree.h"
+
+// constructor
+BNode::BNode() {
+    level_ = -1;
+    num_entries_ = 0;
+    left_sibling_ = right_sibling_ = -1;
+    key_ = NULL;
+
+    block_ = capacity_ = -1;
+    dirty_ = false;
+    btree_ = NULL;
+}
+
+// destructor
+BNode::~BNode() {
+    // if dirty, rewrite to disk
+    if (dirty_) {
+        int block_length = btree_->file()->block_length();
+
+        char* buf = new char[block_length];
+        WriteToBuffer(buf);
+        btree_->file()->WriteBlock(buf, block_);
+
+        delete[] buf;
+    }
+
+    // release
+    if (key_) {
+        delete[] key_;
+        key_ = NULL;
+    }
+    if (son_) {
+        delete[] son_;
+        son_ = NULL;
+    }
+}
+
+// -------------------------------------------------------------------------
+// Init a new node, which not exist
+// <level> -- level (depth) in b-tree
+// <btree> -- b-tree of this node
+void BNode::Init(int level, BTree* btree) {
+    level_ = (char)level;
+    btree_ = btree;
+
+    dirty_ = true;
+
+    int block_length = btree_->file()->block_length();
+    capacity_ = (block_length - GetHeaderSize()) / getEntrySize();
+
+    // init <key_>
+    key_ = new float[capacity_];
+    for (int i = 0; i < capacity_; i++) {
+        key_[i] = MINREAL;
+    }
+    // init <son_>
+    son_ = new int[capacity_];
+    memset(son_, -1, sizeof(son_));
+
+    char* buf = new char[block_length];
+    block_ = btree_->file()->AppendBlock(buf);
+    delete buf;
+}
+
+// load an exist node from disk to init
+// <btree> -- b-tree of this node
+// <block> -- address of file of this node
+void BNode::InitFromFile(BTree* btree, int block) {
+
+    btree_ = btree;
+
+    int block_length = btree_->file()->block_length();
+    capacity_ = (block_length - GetHeaderSize()) / getEntrySize();
+
+    // init <key_>
+    key_ = new float[capacity_];
+    for (int i = 0; i < capacity_; i++) {
+        key_[i] = MINREAL;
+    }
+    // init <son_>
+    son_ = new int[capacity_];
+    memset(son_, -1, sizeof(son_));
+
+    char* buf = new char[block_length];
+    block_ = btree_->file()->ReadBlock(buf, block);
+    delete buf;
+}
+
+// -------------------------------------------------------------------------
+// read a b-node from buffer
+// <buf> -- store info of a b-node
+void BNode::ReadFromBuffer(char* buf) {
+    int pos = 0;
+    // read <level_>
+    memcpy(&level_, &buf[pos], SIZECHAR);
+    pos += SIZECHAR;
+    // read <num_entries_>
+    memcpy(&num_entries_, &buf[pos], SIZEINT);
+    pos += SIZEINT;
+    // read <left_sibling_>
+    memcpy(&left_sibling_, &buf[pos], SIZEINT);
+    pos += SIZEINT;
+    // read <right_sibling_>
+    memcpy(&right_sibling_, &buf[pos], SIZEINT);
+    pos += SIZEINT;
+
+    for (int j = 0; j < num_entries_; j++) {
+        // read <key_>
+        memcpy(&key_[j], &buf[pos], SIZEFLOAT);
+        pos += SIZEFLOAT;
+        // read <son_>
+        memcpy(&son_[j], &buf[pos], SIZEINT);
+        pos += SIZEINT;
+    }
+}
+
+// write a b-node into buffer
+// <buf> -- store info of a b-node
+void BNode::WriteToBuffer(char* buf) {
+    int pos = 0;
+    // write <level_>
+    memcpy(&buf[pos], &level_, SIZECHAR);
+    pos += SIZECHAR;
+    // write <num_entries_>
+    memcpy(&buf[pos], &num_entries_, SIZEINT);
+    pos += SIZEINT;
+    // write <left_sibling_>
+    memcpy(&buf[pos], &left_sibling_, SIZEINT);
+    pos += SIZEINT;
+    // write <right_sibling_>
+    memcpy(&buf[pos], &right_sibling_, SIZEINT);
+    pos += SIZEINT;
+
+    for (int j = 0; j < num_entries_; j++) {
+        // write <key_>
+        memcpy(&buf[pos], &key_[j], SIZEFLOAT);
+        pos += SIZEFLOAT;
+        // write <son_>
+        memcpy(&buf[pos], &son_[j], SIZEINT);
+        pos += SIZEINT;
+    }
+}
+
+// -------------------------------------------------------------------------
+// get entry size in b-node
+int BNode::getEntrySize() {
+    return SIZEFLOAT + SIZEINT;
+}
+
+// -----------------------------------------------------------------------------
+//  Find position of entry that is just less than or equal to input entry.
+//  If input entry is smaller than all entry in this node, we'll return -1.
+//  The scan order is from right to left.
+// -----------------------------------------------------------------------------
+// find pos just less than input key
+int BNode::FindPositionByKey(float key) {
+    int pos = -1;
+    for (int i = num_entries_ - 1; i >= 0; --i) {
+        if (key_[i] <= key) {
+            pos = i;
+            break;
+        }
+    }
+    return pos;
+}
+
+// get <key_> indexed by <index>
+float BNode::GetKey(int index) {
+    if (index < 0 || index >= num_entries_) {
+        // TODO: Error
+    }
+    return key_[index];
+}
+
+// get <son_> indexed by <index>
+float BNode::GetSon(int index) {
+    if (index < 0 || index >= num_entries_) {
+        // TODO: Error
+    }
+    return son_[index];
+}
+
+// -------------------------------------------------------------------------
+// get header size in b-node
+int BNode::GetHeaderSize() {
+    return SIZECHAR + SIZEINT * 3;
+}
+
+// get key of this node
+float BNode::GetKeyOfNode() {
+    return key_[0];
+}
+
+// whether is full?
+bool BNode::IsFull() {
+    return num_entries_ >= capacity_;
+}
+
+// -------------------------------------------------------------------------
+// add new child by key and value of son
+void BNode::AddNewChild(float key, int son) {
+    if (num_entries_ >= capacity_) {
+        // TODO: Error
+    }
+
+    key_[num_entries_] = key;
+    son_[num_entries_] = son;
+
+    num_entries_++;
+    // node modified, <dirty_> is true
+    dirty_ = true;
+}
+
+// -------------------------------------------------------------------------
+// get left sibling node
+BNode* BNode::left_sibling() {
+    BNode* node = NULL;
+    // right sibling node exist
+    if (right_sibling_ != -1) {
+        node = new BNode();
+        // read sibling from disk
+        node->InitFromFile(btree_, left_sibling_);
+    }
+    return node;
+}
+
+// get right sibling node
+BNode* BNode::right_sibling() {
+    BNode* node = NULL;
+    // right sibling node exist
+    if (right_sibling_ != -1) {
+        node = new BNode();
+        // read sibling from disk
+        node->InitFromFile(btree_, right_sibling_);
+    }
+    return node;
+}
+
+// set <left_sibling>
+void BNode::set_left_sibling(BNode* node) {
+    left_sibling_ = node->block();
+}
+
+// set <right sibling>
+void BNode::set_right_sibling(BNode* node) {
+    right_sibling_ = node->block();
+}
+
+// -------------------------------------------------------------------------
+// get <block_>
+int BNode::block() const {
+    return block_;
+}
+
+// get <num_entries_>
+int BNode::num_entries() const {
+    return num_entries_;
+}
+
+// get <level_>
+int BNode::level() const {
+    return level_;
+}

@@ -1,12 +1,15 @@
 #ifndef __B_TREE_H
 #define __B_TREE_H
 
-#include "b_node.h"
-#include "b_tree.h"
+#include "medrank.h"
+#include "block_file.h"
+
+class BNode;
 
 // -----------------------------------------------------------------------------
 //  BTree: b-tree to index ...
 // -----------------------------------------------------------------------------
+
 class BTree {
 public:
     // constructor
@@ -20,25 +23,29 @@ public:
     void Init(char* file_name, int block_length);
 
     // load an exist b-tree
-    void InitRestore(char* file_name);
+    void InitFromFile(char* file_name);
 
     // -------------------------------------------------------------------------
     // bulkload b-tree from hash table in mem
     // <num> -- number of entries
-    int BulkLoad(Pair* pairs, int num);
+    void BulkLoad(Pair* pairs, int num);
+
+    // -------------------------------------------------------------------------
+    // get <file_>
+    BlockFile* file() const;
 
 private:
     // -------------------------------------------------------------------------
-    int root_;                      // address of disk for root
+    int root_block_;                      // address of disk for root
     BlockFile* file_;               // file in disk to store
     BNode* root_ptr_;               // pointer of root
 
     // -------------------------------------------------------------------------
     // read <root> from buffer
-    int ReadHeader(char* buf);
+    void ReadRootFromBuffer(char* buf);
 
     // write <root> into buffer
-    int WriteHeader(char* buf);
+    void WriteRootToBuffer(char* buf);
 
     // -------------------------------------------------------------------------
     // load root of b-tree
