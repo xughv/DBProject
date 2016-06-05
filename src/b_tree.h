@@ -36,7 +36,7 @@ public:
 
 private:
     // -------------------------------------------------------------------------
-    int root_block_;                      // address of disk for root
+    int root_block_;                // address of disk for root
     BlockFile* file_;               // file in disk to store
     BNode* root_ptr_;               // pointer of root
 

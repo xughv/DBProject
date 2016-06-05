@@ -11,6 +11,9 @@ public:
         projection_ = projection;
     }
 
+    bool operator <(Pair &pair) const {
+        return this->projection() < pair.projection();
+    }
 private:
     int id_;                            // object id
     float projection_;                  // projection of the object
@@ -28,5 +31,5 @@ public:
     void Init();
 
 private:
-
+    BTree** trees_;
 };
