@@ -208,7 +208,7 @@ bool BlockFile::ReadBlock(Block block,  int index) {
 
     // move to the position
     if (index <= num_blocks_ && index > 0) {
-        seek_block(index);
+        SeekBlock(index);
     } else {
         printf("BlockFile::ReadBlock request the block %d "
             "which is illegal.", index - 1);
@@ -238,7 +238,7 @@ bool BlockFile::WriteBlock(Block block, int index) {
 
     // move to the position
     if (index <= num_blocks_ && index > 0) {
-        seek_block(index);
+        SeekBlock(index);
     } else {
         printf("BlockFile::WriteBlock request the block %d "
             "which is illegal.", index - 1);
