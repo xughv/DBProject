@@ -44,11 +44,11 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
         i++;
     }
     if (!feof(fp) && i == num) {		// check the size of set
-        printf("The size of set is larger than you input\n", false);
+        printf("The size of set is larger than you input\n");
     }
     else if (feof(fp) && i < num) {
         printf("Set the size of dataset to be %d. ", i);
-        printf("And try again\n", true);
+        printf("And try again\n");
     }
 
 
@@ -56,3 +56,10 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     return true;
 }
 
+float CalcProjection(int dim, unsigned* object, float* line) {
+    float length = 0;
+    for (int i = 0; i < dim; ++i) {
+        length += object[i] * line[i];
+    }
+    return length;
+}

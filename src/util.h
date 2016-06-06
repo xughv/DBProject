@@ -9,5 +9,6 @@ float Rand();
 
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas);
 
+float CalcProjection(unsigned* object, float* line);
 
 #endif // _UTIL_H_
