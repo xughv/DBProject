@@ -5,7 +5,7 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
-
+#include <cstdio>
 void ReadSetFromFile(char* file_name, int num, int dim, float** datas);
 
 
