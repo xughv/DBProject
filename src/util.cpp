@@ -5,8 +5,12 @@
 
 #include "util.h"
 
+#include <cstring>
 #include <cstdlib>
 #include <cmath>
+#include <iostream>
+
+#include "def.h"
 
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
