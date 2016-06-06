@@ -7,7 +7,7 @@
 
 float Rand();
 
-bool ReadSetFromFile(char* file_name, int &num, int &dim, float** datas);
+void ReadSetFromFile(char* file_name, int num, int dim, float** datas);
 
 
 #endif // _UTIL_H_
