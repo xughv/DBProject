@@ -5,9 +5,13 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
+<<<<<<< HEAD
 #include <cstdio>
-void ReadSetFromFile(char* file_name, int num, int dim, float** datas);
+=======
+float Rand();
 
+>>>>>>> refs/remotes/origin/master
+void ReadSetFromFile(char* file_name, int num, int dim, float** datas);
 
 
 #endif // _UTIL_H_

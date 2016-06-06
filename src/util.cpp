@@ -5,6 +5,26 @@
 
 #include "util.h"
 
+<<<<<<< HEAD
+=======
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <iostream>
+
+#include "def.h"
+
+float Rand() {
+    float u1 = (float) rand() / (float) RAND_MAX;
+    float u2 = (float) rand() / (float) RAND_MAX;
+
+    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * PI * u2);
+
+    return x;
+}
+
+
+>>>>>>> refs/remotes/origin/master
 void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     int i = 0;
     int j = 0;
@@ -36,4 +56,9 @@ void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
 
     fclose(fp);						// close data file
     return;
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> refs/remotes/origin/master
