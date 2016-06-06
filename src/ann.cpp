@@ -1,3 +1,4 @@
+#include <cstring>
 #include "ann.h"
 #include "util.h"
 
@@ -7,11 +8,15 @@ void GenRandomVector(int dem, float *vec) {
     }
 }
 
-void Indexing(int num, int dim, int page_size, char* data_set, char* output_folder) {
+void Indexing(int num, int dim, int page_size, char* file_name, char* output_folder) {
 
-    float** data = new float*[num];
-    for (int i = 0; i < num; i++) data[i] = new float[dim];
-    if (!ReadSetFromFile(data_set, num, dim, data)) {
+    unsigned** data = new unsigned*[num];
+    for (int i = 0; i < num; i++) {
+        data[i] = new unsigned[dim];
+        memset(data[i], 0, sizeof(data[i])*dim);
+    }
+
+    if (!ReadSetFromFile(file_name, num, dim, data)) {
         // TODO: Error
     }
 

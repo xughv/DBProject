@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <cstdio>
 #include <cmath>
 #include <iostream>
 
@@ -22,7 +23,7 @@ float Rand() {
 }
 
 
-void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
+bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     int i = 0;
     int j = 0;
     FILE* fp = NULL;
@@ -30,7 +31,7 @@ void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     fp = fopen(file_name, "rb");			// open data file
     if (!fp) {
         printf("I could not open %s.\n", file_name);
-        return;
+        return false;
     }
 
     fseek(fp, 16, SEEK_SET);
@@ -52,6 +53,6 @@ void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
 
 
     fclose(fp);						// close data file
-    return;
+    return true;
 }
 
