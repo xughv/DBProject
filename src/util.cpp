@@ -5,8 +5,6 @@
 
 #include "util.h"
 
-<<<<<<< HEAD
-=======
 #include <cstring>
 #include <cstdlib>
 #include <cmath>
@@ -24,7 +22,6 @@ float Rand() {
 }
 
 
->>>>>>> refs/remotes/origin/master
 void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     int i = 0;
     int j = 0;
@@ -56,9 +53,5 @@ void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
 
     fclose(fp);						// close data file
     return;
-<<<<<<< HEAD
-}
-=======
 }
 
->>>>>>> refs/remotes/origin/master
