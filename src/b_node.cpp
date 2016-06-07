@@ -55,11 +55,11 @@ void BNode::Init(int level, BTree* btree) {
     // init <key_>
     key_ = new float[capacity_];
     for (int i = 0; i < capacity_; i++) {
-        key_[i] = MINREAL;
+        key_[i] = FLOAT_MIN;
     }
     // init <son_>
     son_ = new int[capacity_];
-    memset(son_, -1, sizeof(son_));
+    memset(son_, -1, sizeof(int) * capacity_);
 
     char* buf = new char[block_length];
     block_ = btree_->file()->AppendBlock(buf);
@@ -79,11 +79,11 @@ void BNode::InitFromFile(BTree* btree, int block) {
     // init <key_>
     key_ = new float[capacity_];
     for (int i = 0; i < capacity_; i++) {
-        key_[i] = MINREAL;
+        key_[i] = FLOAT_MIN;
     }
     // init <son_>
     son_ = new int[capacity_];
-    memset(son_, -1, sizeof(son_));
+    memset(son_, -1, sizeof(int) * capacity_);
 
     char* buf = new char[block_length];
     block_ = btree_->file()->ReadBlock(buf, block);
@@ -96,25 +96,25 @@ void BNode::InitFromFile(BTree* btree, int block) {
 void BNode::ReadFromBuffer(char* buf) {
     int pos = 0;
     // read <level_>
-    memcpy(&level_, &buf[pos], SIZECHAR);
-    pos += SIZECHAR;
+    memcpy(&level_, &buf[pos], SIZE_CHAR);
+    pos += SIZE_CHAR;
     // read <num_entries_>
-    memcpy(&num_entries_, &buf[pos], SIZEINT);
-    pos += SIZEINT;
+    memcpy(&num_entries_, &buf[pos], SIZE_INT);
+    pos += SIZE_INT;
     // read <left_sibling_>
-    memcpy(&left_sibling_, &buf[pos], SIZEINT);
-    pos += SIZEINT;
+    memcpy(&left_sibling_, &buf[pos], SIZE_INT);
+    pos += SIZE_INT;
     // read <right_sibling_>
-    memcpy(&right_sibling_, &buf[pos], SIZEINT);
-    pos += SIZEINT;
+    memcpy(&right_sibling_, &buf[pos], SIZE_INT);
+    pos += SIZE_INT;
 
     for (int j = 0; j < num_entries_; j++) {
         // read <key_>
-        memcpy(&key_[j], &buf[pos], SIZEFLOAT);
-        pos += SIZEFLOAT;
+        memcpy(&key_[j], &buf[pos], SIZE_FLOAT);
+        pos += SIZE_FLOAT;
         // read <son_>
-        memcpy(&son_[j], &buf[pos], SIZEINT);
-        pos += SIZEINT;
+        memcpy(&son_[j], &buf[pos], SIZE_INT);
+        pos += SIZE_INT;
     }
 }
 
@@ -123,32 +123,32 @@ void BNode::ReadFromBuffer(char* buf) {
 void BNode::WriteToBuffer(char* buf) {
     int pos = 0;
     // write <level_>
-    memcpy(&buf[pos], &level_, SIZECHAR);
-    pos += SIZECHAR;
+    memcpy(&buf[pos], &level_, SIZE_CHAR);
+    pos += SIZE_CHAR;
     // write <num_entries_>
-    memcpy(&buf[pos], &num_entries_, SIZEINT);
-    pos += SIZEINT;
+    memcpy(&buf[pos], &num_entries_, SIZE_INT);
+    pos += SIZE_INT;
     // write <left_sibling_>
-    memcpy(&buf[pos], &left_sibling_, SIZEINT);
-    pos += SIZEINT;
+    memcpy(&buf[pos], &left_sibling_, SIZE_INT);
+    pos += SIZE_INT;
     // write <right_sibling_>
-    memcpy(&buf[pos], &right_sibling_, SIZEINT);
-    pos += SIZEINT;
+    memcpy(&buf[pos], &right_sibling_, SIZE_INT);
+    pos += SIZE_INT;
 
     for (int j = 0; j < num_entries_; j++) {
         // write <key_>
-        memcpy(&buf[pos], &key_[j], SIZEFLOAT);
-        pos += SIZEFLOAT;
+        memcpy(&buf[pos], &key_[j], SIZE_FLOAT);
+        pos += SIZE_FLOAT;
         // write <son_>
-        memcpy(&buf[pos], &son_[j], SIZEINT);
-        pos += SIZEINT;
+        memcpy(&buf[pos], &son_[j], SIZE_INT);
+        pos += SIZE_INT;
     }
 }
 
 // -------------------------------------------------------------------------
 // get entry size in b-node
 int BNode::getEntrySize() {
-    return SIZEFLOAT + SIZEINT;
+    return SIZE_FLOAT + SIZE_INT;
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +187,7 @@ float BNode::GetSon(int index) {
 // -------------------------------------------------------------------------
 // get header size in b-node
 int BNode::GetHeaderSize() {
-    return SIZECHAR + SIZEINT * 3;
+    return SIZE_CHAR + SIZE_INT * 3;
 }
 
 // get key of this node

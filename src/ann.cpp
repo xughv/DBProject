@@ -3,7 +3,6 @@
 #include <cmath>
 #include "ann.h"
 #include "medrank.h"
-#include "util.h"
 
 void GenRandomVector(int dim, float* vec) {
     float length = 0;
@@ -31,6 +30,8 @@ void Indexing(int num, int dim, int page_size, char* file_name, char* output_fol
         // TODO: Error
     } else {
 
+        // TODO: Create folder
+
         float* line = new float[dim];
         Pair* pairs = new Pair[num];
 
@@ -38,9 +39,10 @@ void Indexing(int num, int dim, int page_size, char* file_name, char* output_fol
         for (int i = 0; i < num; ++i) {
             pairs[i].SetValue(i, CalcProjection(data[i], line));
             std::sort(pairs, pairs + num);
+
+            BTree* btree = new BTree();
+            btree->Init("", page_size);
+            btree->BulkLoad(pairs, num);
         }
-
-        BTree* b_tree = new BTree();
     }
-
 }

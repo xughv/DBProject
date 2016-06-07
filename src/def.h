@@ -1,5 +1,8 @@
-#ifndef __DEF_H
-#define __DEF_H
+#ifndef _DEF_H_
+#define _DEF_H_
+
+#include <climits>
+#include <cfloat>
 
 // -----------------------------------------------------------------------------
 //  Typedefs
@@ -7,47 +10,23 @@
 typedef char Block[];
 
 // -----------------------------------------------------------------------------
-//  Macros
-// -----------------------------------------------------------------------------
-#define MIN(a, b)   (((a) < (b)) ? (a) : (b))
-#define MAX(a, b)   (((a) > (b)) ? (a) : (b))
-
-//#ifndef SEEK_SET
-//#define SEEK_SET 0
-//#define SEEK_CUR 1
-//#define SEEK_END 2
-//#endif	/* !SEEK_SET */
-
-// -----------------------------------------------------------------------------
 //  Constants
 // -----------------------------------------------------------------------------
-const float E  = 2.7182818F;        // math constants
-const float PI = 3.141592654F;
-
-const float FLOATZERO = 1e-6F;      // accuracy
-                                    // max real value
-const float MAXREAL   = 3.402823466e+38F;
-const float MINREAL   = -MAXREAL;   // min real value
-
-const long  MAXMEMORY = 1073741824; // max memory, 1 GB
-const int   MAXINT    = 2147483647; // max integer value
-const int   MININT    = -MAXINT;    // min integer value
-
-// size of type <int>
-const int   SIZEINT   = (int) sizeof(int);
-// size of type <char>
-const int   SIZECHAR  = (int) sizeof(char);
-// size of type <float>
-const int   SIZEFLOAT = (int) sizeof(float);
-// size of type <bool>
-const int   SIZEBOOL  = (int) sizeof(bool);
 
 // file header size
-const int   BFHEAD_LENGTH = (int) (sizeof(int) * 2);
-// index size of leaf node
-const int   INDEX_SIZE_LEAF_NODE = 4096;
-// max top-k value
-const int   MAXK = 100;
+const int BFHEAD_LENGTH = (int) (sizeof(int) * 2);
+
+// default page size
+const int PAGE_SIZE_DEFAULT = 1024;
+
+// size of type <int>
+const size_t SIZE_INT   = sizeof(int);
+// size of type <char>
+const size_t SIZE_CHAR  = sizeof(char);
+// size of type <float>
+const size_t SIZE_FLOAT = sizeof(float);
 
 
-#endif
+const float FLOAT_MIN = 0 - FLT_MAX;
+
+#endif // _DEF_H_

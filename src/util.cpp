@@ -9,15 +9,12 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
-#include <iostream>
-
-#include "def.h"
 
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
     float u2 = (float) rand() / (float) RAND_MAX;
 
-    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * PI * u2);
+    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * M_PI * u2);
 
     return x;
 }
