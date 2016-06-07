@@ -7,9 +7,12 @@ class MEDRANK {
 public:
     // Singleton
     static MEDRANK* GetInstance() {
-        static MEDRANK* instance;
-        return instance;
+        static MEDRANK instance;
+        return &instance;
     }
+
+    // destructor
+    ~MEDRANK();
     // -------------------------------------------------------------------------
     void Init(char* output_folder);
 
@@ -19,8 +22,6 @@ public:
 private:
     // constructor
     MEDRANK();
-    // destructor
-    ~MEDRANK();
 
     int dim_;
 

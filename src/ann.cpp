@@ -6,30 +6,34 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
     unsigned** data = new unsigned*[num];
     for (int i = 0; i < num; i++) {
         data[i] = new unsigned[dim];
-        memset(data[i], 0, sizeof(data[i])*dim);
+        memset(data[i], 0, sizeof(unsigned) * dim);
     }
 
     if (!ReadSetFromFile(data_set, num, dim, data)) {
         // TODO: Error
+        printf("Read DataSet Failed.\n");
     } else {
 
-        char* index_path = NULL;
+        char* index_path = new char[strlen(output_folder) + 20];
 
         strcpy(index_path, output_folder);
         strcat(index_path, "index/");
 
         if (!CreateDirectory(index_path)) {
+            printf("Create Directory Failed.\n");
             // TODO: Error
         }
 
         MEDRANK* medrank = MEDRANK::GetInstance();
+
         medrank->GenLines(dim, num_line);
 
         Pair* pairs = new Pair[num];
 
         char* file_name = new char[20];
 
-        for (int i = 0; i < num; ++i) {
+        for (int i = 0; i < num_line; ++i) {
+
             pairs[i].SetValue(i, CalcProjection(dim, data[i], medrank->GetLine(i)));
             // std::sort(pairs, pairs + num);
 
@@ -42,11 +46,15 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
             btree->BulkLoad(pairs, num);
         }
 
-        delete index_path;
-        delete file_name;
-
-        // TODO: Release space
+        delete[] index_path;
+        delete[] file_name;
+        delete[] pairs;
     }
+
+    for (int i = 0; i < num; i++) {
+        delete[] data[i];
+    }
+    delete [] data;
 }
 
 void CalcANN(int num, int dim, char* query_set, char* output_folder) {
