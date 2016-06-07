@@ -4,9 +4,7 @@
 
 #ifndef _UTIL_H_
 #define _UTIL_H_
-<<<<<<< HEAD
 #include <cstdio>
-=======
 
 // -----------------------------------------------------------------------------
 //  Pair: structure of a set of pairs
@@ -30,7 +28,6 @@ private:
 };
 
 
->>>>>>> refs/remotes/origin/master
 float Rand();
 
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas);
