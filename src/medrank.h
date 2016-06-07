@@ -9,10 +9,11 @@ public:
     ~MEDRANK();
 
     // -------------------------------------------------------------------------
-    void Init();
+    void Init(char* output_folder);
 
 private:
-    int* h;
-    int* l;
+    int* h_;
+    int* l_;
+    char* index_path_;
     BTree** trees_;
 };

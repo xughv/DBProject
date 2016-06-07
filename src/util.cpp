@@ -10,6 +10,8 @@
 #include <cstdio>
 #include <cmath>
 
+#include <sys/stat.h>
+
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
     float u2 = (float) rand() / (float) RAND_MAX;
@@ -59,4 +61,44 @@ float CalcProjection(int dim, unsigned* object, float* line) {
         length += object[i] * line[i];
     }
     return length;
+}
+
+bool CreateDirectory(const char* path) {
+    if (path == NULL) {
+        return false;
+    }
+
+    FILE *fp = NULL;
+
+    char tmp_path[100];
+    memset(tmp_path, 0, sizeof(tmp_path));
+
+    int tmp_pos = 0;
+    const char* cur_pos = path;
+
+    while (*cur_pos++ != '\0') {
+
+        tmp_path[tmp_pos++] = *(cur_pos-1);
+
+        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
+            // check the directory exists or not
+            fp = fopen(tmp_path, "w");
+            if (fp == NULL) {
+                // create directory
+                if (mkdir(tmp_path, 0777) != 0) {
+                    // TODO: Error
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void GenTreeFileName(int tree_id, char* path, char* file_name) {
+    char tmp[20];
+    strcpy(file_name, path);
+    sprintf(tmp, "%d", tree_id);
+    strcat(file_name, tmp);
+    strcat(file_name, ".index");
 }

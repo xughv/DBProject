@@ -30,19 +30,38 @@ void Indexing(int num, int dim, int page_size, char* file_name, char* output_fol
         // TODO: Error
     } else {
 
-        // TODO: Create folder
+        char* index_path = NULL;
+
+        strcpy(index_path, output_folder);
+        strcat(index_path, "index/");
+
+        if (!CreateDirectory(index_path)) {
+            // TODO: Error
+        }
 
         float* line = new float[dim];
         Pair* pairs = new Pair[num];
 
+        char* file_name = new char[20];
+
         GenRandomVector(dim, line);
+
         for (int i = 0; i < num; ++i) {
-            pairs[i].SetValue(i, CalcProjection(data[i], line));
+            pairs[i].SetValue(i, CalcProjection(dim, data[i], line));
             std::sort(pairs, pairs + num);
 
+            // generate the file name of the b-tree
+            GenTreeFileName(i, index_path, file_name);
+
+            // build a b-tree
             BTree* btree = new BTree();
-            btree->Init("", page_size);
+            btree->Init(file_name, page_size);
             btree->BulkLoad(pairs, num);
         }
+
+        delete index_path;
+        delete file_name;
+
+        // TODO: Release space
     }
 }

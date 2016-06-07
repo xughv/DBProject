@@ -19,6 +19,9 @@ const int BFHEAD_LENGTH = (int) (sizeof(int) * 2);
 // default page size
 const int PAGE_SIZE_DEFAULT = 1024;
 
+// default output dir
+const char* OUTPUT_DIR_DEFAULT = "results/";
+
 // size of type <int>
 const size_t SIZE_INT   = sizeof(int);
 // size of type <char>

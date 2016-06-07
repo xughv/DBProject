@@ -31,6 +31,10 @@ float Rand();
 
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas);
 
-float CalcProjection(unsigned* object, float* line);
+float CalcProjection(int dim, unsigned* object, float* line);
+
+bool bool CreateDirectory(const char* path);
+
+void GenTreeFileName(int tree_id, char* path, char* file_name);
 
 #endif // _UTIL_H_
