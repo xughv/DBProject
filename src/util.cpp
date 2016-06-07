@@ -7,22 +7,22 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <cstdio>
 #include <cmath>
-#include <iostream>
 
-#include "def.h"
+#include <sys/stat.h>
 
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
     float u2 = (float) rand() / (float) RAND_MAX;
 
-    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * PI * u2);
+    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * M_PI * u2);
 
     return x;
 }
 
 
-void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
+bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     int i = 0;
     int j = 0;
     FILE* fp = NULL;
@@ -30,7 +30,7 @@ void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     fp = fopen(file_name, "rb");			// open data file
     if (!fp) {
         printf("I could not open %s.\n", file_name);
-        return;
+        return false;
     }
 
     fseek(fp, 16, SEEK_SET);
@@ -43,15 +43,62 @@ void ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
         i++;
     }
     if (!feof(fp) && i == num) {		// check the size of set
-        printf("The size of set is larger than you input\n", false);
+        printf("The size of set is larger than you input\n");
     }
     else if (feof(fp) && i < num) {
         printf("Set the size of dataset to be %d. ", i);
-        printf("And try again\n", true);
+        printf("And try again\n");
     }
 
 
     fclose(fp);						// close data file
-    return;
+    return true;
 }
 
+float CalcProjection(int dim, unsigned* object, float* line) {
+    float length = 0;
+    for (int i = 0; i < dim; ++i) {
+        length += object[i] * line[i];
+    }
+    return length;
+}
+
+bool CreateDirectory(const char* path) {
+    if (path == NULL) {
+        return false;
+    }
+
+    FILE *fp = NULL;
+
+    char tmp_path[100];
+    memset(tmp_path, 0, sizeof(tmp_path));
+
+    int tmp_pos = 0;
+    const char* cur_pos = path;
+
+    while (*cur_pos++ != '\0') {
+
+        tmp_path[tmp_pos++] = *(cur_pos-1);
+
+        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
+            // check the directory exists or not
+            fp = fopen(tmp_path, "w");
+            if (fp == NULL) {
+                // create directory
+                if (mkdir(tmp_path, 0777) != 0) {
+                    // TODO: Error
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void GenTreeFileName(int tree_id, char* path, char* file_name) {
+    char tmp[20];
+    strcpy(file_name, path);
+    sprintf(tmp, "%d", tree_id);
+    strcat(file_name, tmp);
+    strcat(file_name, ".index");
+}

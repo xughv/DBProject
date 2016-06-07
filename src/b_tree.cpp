@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include "b_node.h"
-#include "def.h"
 
 // -----------------------------------------------------------------------------
 //  BTree: b-tree to index
@@ -75,12 +74,12 @@ void BTree::InitFromFile(char* file_name) {
 // -------------------------------------------------------------------------
 // read <root> from buffer
 void BTree::ReadRootFromBuffer(char* buf) {
-    memcpy(&root_block_, buf, SIZEINT);
+    memcpy(&root_block_, buf, SIZE_INT);
 }
 
 // write <root> into buffer
 void BTree::WriteRootToBuffer(char* buf) {
-    memcpy(buf, &root_block_, SIZEINT);
+    memcpy(buf, &root_block_, SIZE_INT);
 }
 
 // -------------------------------------------------------------------------
@@ -176,7 +175,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
             BNode* child = new BNode();
             child->InitFromFile(this, block);
 
-            int key = child->GetKeyOfNode();
+            float key = child->GetKeyOfNode();
 
             delete child;
 

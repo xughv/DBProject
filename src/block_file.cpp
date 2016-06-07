@@ -81,15 +81,14 @@ BlockFile::BlockFile(char* file_name, int block_length) {
         //  beginning position of the file.
         // ---------------------------------------------------------------------
         char* buffer = NULL;
-        int len = -1; // cmpt remain length of a block
-        buffer = new char[(len = block_length_ - (int) ftell(fp_))];
+        int len = block_length_ - (int) ftell(fp_); // cmpt remain length of a block
+        buffer = new char[len];
 
         // set to 0 to remain bytes
         memset(buffer, 0, sizeof(buffer));
         PutBytes(buffer, len);
 
         delete[] buffer;
-        buffer = NULL;
     }
     // -------------------------------------------------------------------------
     //  Redirect file pointer to the start position of the file
@@ -112,14 +111,14 @@ BlockFile::~BlockFile() {
 // -----------------------------------------------------------------------------
 // write an <int> value to bin file
 void BlockFile::FwriteNumber(int value) {
-    PutBytes((char *) &value, SIZEINT);
+    PutBytes((char *) &value, SIZE_INT);
 }
 
 // -----------------------------------------------------------------------------
 // read an <int> value from bin file
 int BlockFile::FreadNumber() {
-    char ca[SIZEINT];
-    GetBytes(ca, SIZEINT);
+    char ca[SIZE_INT];
+    GetBytes(ca, SIZE_INT);
 
     return *((int *)ca);
 }
@@ -267,7 +266,7 @@ int BlockFile::AppendBlock(Block block) {
     PutBytes(block, block_length_);// write a <block>
     num_blocks_++;                  // add 1 to <num_blocks_>
     
-    fseek(fp_, SIZEINT, SEEK_SET);  // <fp_> point to pos of header
+    fseek(fp_, SIZE_INT, SEEK_SET);  // <fp_> point to pos of header
     FwriteNumber(num_blocks_);     // update <num_blocks_>
 
     // -------------------------------------------------------------------------
@@ -294,7 +293,7 @@ bool BlockFile::DeleteLastBlocks(int num) {
     }
 
     num_blocks_ -= num;             // update <number>
-    fseek(fp_, SIZEINT, SEEK_SET);
+    fseek(fp_, SIZE_INT, SEEK_SET);
     FwriteNumber(num_blocks_);
 
     fseek(fp_, 0, SEEK_SET);        // <fp> point to beginning of file

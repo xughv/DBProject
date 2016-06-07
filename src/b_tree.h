@@ -3,6 +3,7 @@
 
 #include "medrank.h"
 #include "block_file.h"
+#include "util.h"
 
 class BNode;
 
