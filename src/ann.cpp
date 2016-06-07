@@ -1,24 +1,9 @@
 #include <cstring>
-#include <algorithm>
-#include <cmath>
 #include "ann.h"
 #include "medrank.h"
 
-void GenRandomVector(int dim, float* vec) {
-    float length = 0;
-    for (int i = 0; i < dim; ++i) {
-        vec[i] = Rand();
-        length += vec[i] * vec[i];
-    }
 
-    // Normalize
-    length = sqrt(length);
-    for (int i = 0; i < dim; ++i) {
-        vec[i] = vec[i]/length;
-    }
-}
-
-void Indexing(int num, int dim, int page_size, char* file_name, char* output_folder) {
+void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
     unsigned** data = new unsigned*[num];
     for (int i = 0; i < num; i++) {
@@ -26,7 +11,7 @@ void Indexing(int num, int dim, int page_size, char* file_name, char* output_fol
         memset(data[i], 0, sizeof(data[i])*dim);
     }
 
-    if (!ReadSetFromFile(file_name, num, dim, data)) {
+    if (!ReadSetFromFile(data_set, num, dim, data)) {
         // TODO: Error
     } else {
 
@@ -39,16 +24,16 @@ void Indexing(int num, int dim, int page_size, char* file_name, char* output_fol
             // TODO: Error
         }
 
-        float* line = new float[dim];
+        MEDRANK* medrank = MEDRANK::GetInstance();
+        medrank->GenLines(dim, num_line);
+
         Pair* pairs = new Pair[num];
 
         char* file_name = new char[20];
 
-        GenRandomVector(dim, line);
-
         for (int i = 0; i < num; ++i) {
-            pairs[i].SetValue(i, CalcProjection(dim, data[i], line));
-            std::sort(pairs, pairs + num);
+            pairs[i].SetValue(i, CalcProjection(dim, data[i], medrank->GetLine(i));
+            // std::sort(pairs, pairs + num);
 
             // generate the file name of the b-tree
             GenTreeFileName(i, index_path, file_name);
@@ -63,5 +48,20 @@ void Indexing(int num, int dim, int page_size, char* file_name, char* output_fol
         delete file_name;
 
         // TODO: Release space
+    }
+}
+
+void CalcANN(int num, int dim, char* query_set, char* output_folder) {
+
+    unsigned **data = new unsigned *[num];
+    for (int i = 0; i < num; i++) {
+        data[i] = new unsigned[dim];
+        memset(data[i], 0, sizeof(data[i]) * dim);
+    }
+
+    if (!ReadSetFromFile(query_set, num, dim, data)) {
+        // TODO: Error
+    } else {
+
     }
 }

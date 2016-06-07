@@ -1,7 +1,6 @@
 #ifndef __B_TREE_H
 #define __B_TREE_H
 
-#include "medrank.h"
 #include "block_file.h"
 #include "util.h"
 

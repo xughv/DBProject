@@ -20,6 +20,19 @@ float Rand() {
     return x;
 }
 
+void GenRandomVector(int dim, float* vec) {
+    float length = 0;
+    for (int i = 0; i < dim; ++i) {
+        vec[i] = Rand();
+        length += vec[i] * vec[i];
+    }
+
+    // Normalize
+    length = sqrt(length);
+    for (int i = 0; i < dim; ++i) {
+        vec[i] = vec[i]/length;
+    }
+}
 
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     int i = 0;

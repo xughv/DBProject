@@ -27,14 +27,15 @@ private:
     float projection_;                  // projection of the object
 };
 
-
 float Rand();
+
+void GenRandomVector(int dim, float* vec);
 
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas);
 
 float CalcProjection(int dim, unsigned* object, float* line);
 
-bool bool CreateDirectory(const char* path);
+bool CreateDirectory(const char* path);
 
 void GenTreeFileName(int tree_id, char* path, char* file_name);
 
