@@ -14,7 +14,3 @@ CMakeLists.txt
 medrank
 
 *.o
-
-medrank
-
-*.o
