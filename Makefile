@@ -1,10 +1,8 @@
-SRCS=src/util.cpp src/block_file.cpp src/b_node.cpp \
-src/b_tree.cpp src/medrank.cpp src/ann.cpp src/main.cpp
-
-OBJS=$(SRCS:.cpp=.o)
-
-CXX?=g++ -std=c++11
-CPPFLAGS=-w -O3
+SRCS		= src/util.cpp src/block_file.cpp src/b_node.cpp \
+				src/b_tree.cpp src/medrank.cpp src/ann.cpp src/main.cpp
+OBJS		= $(SRCS:.cpp=.o)
+CXX			= g++ -std=c++11
+CPPFLAGS	= -w -O3
 
 .PHONY: clean
 

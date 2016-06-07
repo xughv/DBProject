@@ -1,11 +1,14 @@
+#ifndef _MED_RANK_H_
+#define _MED_RANK_H_
+
 #include "b_tree.h"
 
 class MEDRANK {
 public:
     // Singleton
     static MEDRANK* GetInstance() {
-        if (instance_ == NULL) instance_ = new MEDRANK();
-        return instance_;
+        static MEDRANK* instance;
+        return instance;
     }
     // -------------------------------------------------------------------------
     void Init(char* output_folder);
@@ -19,8 +22,6 @@ private:
     // destructor
     ~MEDRANK();
 
-    static MEDRANK* instance_;
-
     int dim_;
 
     int* h_;
@@ -32,3 +33,5 @@ private:
     int num_line_;
     float** lines_;
 };
+
+#endif // _MEDRANK_H_

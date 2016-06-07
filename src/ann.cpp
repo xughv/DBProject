@@ -1,7 +1,5 @@
-#include <cstring>
 #include "ann.h"
-#include "medrank.h"
-
+#include <cstring>
 
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
@@ -32,7 +30,7 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         char* file_name = new char[20];
 
         for (int i = 0; i < num; ++i) {
-            pairs[i].SetValue(i, CalcProjection(dim, data[i], medrank->GetLine(i));
+            pairs[i].SetValue(i, CalcProjection(dim, data[i], medrank->GetLine(i)));
             // std::sort(pairs, pairs + num);
 
             // generate the file name of the b-tree

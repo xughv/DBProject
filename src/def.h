@@ -12,7 +12,7 @@ typedef char Block[];
 // -----------------------------------------------------------------------------
 //  Constants
 // -----------------------------------------------------------------------------
-
+const float PI = 3.141592654F;
 // file header size
 const int BFHEAD_LENGTH = (int) (sizeof(int) * 2);
 
@@ -20,7 +20,7 @@ const int BFHEAD_LENGTH = (int) (sizeof(int) * 2);
 const int PAGE_SIZE_DEFAULT = 1024;
 
 // default output dir
-const char OUTPUT_DIR_DEFAULT[10] = "results/";
+const char OUTPUT_DIR_DEFAULT[] = "results/";
 
 // size of type <int>
 const size_t SIZE_INT   = sizeof(int);

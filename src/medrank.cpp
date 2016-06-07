@@ -1,7 +1,5 @@
 #include "medrank.h"
 
-MEDRANK::instance_ = NULL;
-
 void MEDRANK::GenLines(int dim, int num_line) {
     num_line_ = num_line;
     dim_ = dim;
@@ -15,4 +13,8 @@ void MEDRANK::GenLines(int dim, int num_line) {
 
 float* MEDRANK::GetLine(int index) {
     return lines_[index];
+}
+
+void MEDRANK::Init(char *output_folder) {
+
 }

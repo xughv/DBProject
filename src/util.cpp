@@ -12,11 +12,13 @@
 
 #include <sys/stat.h>
 
+#include "def.h"
+
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
     float u2 = (float) rand() / (float) RAND_MAX;
 
-    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * M_PI * u2);
+    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * PI * u2);
 
     return x;
 }
@@ -69,7 +71,7 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
 }
 
 float CalcProjection(int dim, unsigned* object, float* line) {
-    float length = 0;
+    float length = 0.0f;
     for (int i = 0; i < dim; ++i) {
         length += object[i] * line[i];
     }
