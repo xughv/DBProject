@@ -2,6 +2,7 @@
 #define _ANN_H_
 
 #include "util.h"
+#include "medrank.h"
 
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder);
 

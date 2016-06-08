@@ -1,27 +1,31 @@
+#ifndef _MED_RANK_H_
+#define _MED_RANK_H_
+
 #include "b_tree.h"
 
 class MEDRANK {
 public:
     // Singleton
     static MEDRANK* GetInstance() {
-        if (instance_ == NULL) instance_ = new MEDRANK();
-        return instance_;
+        static MEDRANK instance;
+        return &instance;
     }
+
+    // destructor
+    ~MEDRANK();
     // -------------------------------------------------------------------------
     void Init(char* output_folder);
 
     void GenLines(int dim, int num_line);
 
     float* GetLine(int index);
+
+    int num_line();
+
+    void set_q(int index, float value);
 private:
     // constructor
     MEDRANK();
-    // destructor
-    ~MEDRANK();
-
-    static MEDRANK* instance_;
-
-    int dim_;
 
     int* h_;
     int* l_;
@@ -30,5 +34,8 @@ private:
     BTree** trees_;
 
     int num_line_;
+    int dim_line_;
     float** lines_;
 };
+
+#endif // _MEDRANK_H_

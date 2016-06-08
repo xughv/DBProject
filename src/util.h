@@ -39,4 +39,7 @@ bool CreateDirectory(const char* path);
 
 void GenTreeFileName(int tree_id, char* path, char* file_name);
 
+template<class T>
+void Sort(T* begin, T* end);
+
 #endif // _UTIL_H_

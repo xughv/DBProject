@@ -11,11 +11,13 @@
 
 #include <sys/stat.h>
 
+#include "def.h"
+
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
     float u2 = (float) rand() / (float) RAND_MAX;
 
-    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * M_PI * u2);
+    float x = sqrt(-2.0f * log(u1)) * cos(2.0f * PI * u2);
 
     return x;
 }
@@ -35,26 +37,28 @@ void GenRandomVector(int dim, float* vec) {
 }
 
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
-    int i = 0;
-    int j = 0;
-    FILE* fp = NULL;
 
-    fp = fopen(file_name, "rb");			// open data file
+    // open data file
+    FILE* fp = fopen(file_name, "rb");
+
     if (!fp) {
         printf("I could not open %s.\n", file_name);
         return false;
     }
 
     fseek(fp, 16, SEEK_SET);
-    i = 0;
 
-    while (!feof(fp) && i < num) {	// read data file
-        for (j = 0; j < dim; j++) {
+    int i = 0;
+    // read data file
+    while (!feof(fp) && i < num) {
+        for (int j = 0; j < dim; j++) {
             fread(&datas[i][j], sizeof(char), 1, fp);
         }
         i++;
     }
-    if (!feof(fp) && i == num) {		// check the size of set
+
+    // check the size of set
+    if (!feof(fp) && i == num) {
         printf("The size of set is larger than you input\n");
     }
     else if (feof(fp) && i < num) {
@@ -62,15 +66,15 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
         printf("And try again\n");
     }
 
-
-    fclose(fp);						// close data file
+    // close data file
+    fclose(fp);
     return true;
 }
 
 float CalcProjection(int dim, unsigned* object, float* line) {
-    float length = 0;
+    float length = 0.0f;
     for (int i = 0; i < dim; ++i) {
-        length += object[i] * line[i];
+        length += (float)object[i] * line[i];
     }
     return length;
 }
@@ -79,8 +83,6 @@ bool CreateDirectory(const char* path) {
     if (path == NULL) {
         return false;
     }
-
-    FILE *fp = NULL;
 
     char tmp_path[100];
     memset(tmp_path, 0, sizeof(tmp_path));
@@ -93,9 +95,10 @@ bool CreateDirectory(const char* path) {
         tmp_path[tmp_pos++] = *(cur_pos-1);
 
         if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
+            tmp_path[tmp_pos] = '\0';
             // check the directory exists or not
-            fp = fopen(tmp_path, "w");
-            if (fp == NULL) {
+            int exist = access(tmp_path, F_OK);;
+            if (exist != 0) {
                 // create directory
                 if (mkdir(tmp_path, 0777) != 0) {
                     // TODO: Error
@@ -113,4 +116,9 @@ void GenTreeFileName(int tree_id, char* path, char* file_name) {
     sprintf(tmp, "%d", tree_id);
     strcat(file_name, tmp);
     strcat(file_name, ".index");
+}
+
+template<class T>
+void Sort(T* begin, T* end) {
+
 }
