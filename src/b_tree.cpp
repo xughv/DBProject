@@ -219,3 +219,13 @@ void BTree::BulkLoad(Pair* pairs, int num) {
         }
     }
 }
+
+
+// -------------------------------------------------------------------------
+int BTree::SearchH(float q_projection) {
+
+}
+
+int BTree::SearchL(float q_projection) {
+
+}

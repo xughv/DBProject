@@ -4,6 +4,7 @@
 
 #ifndef _UTIL_H_
 #define _UTIL_H_
+#include <cstdio>
 
 // -----------------------------------------------------------------------------
 //  Pair: structure of a set of pairs

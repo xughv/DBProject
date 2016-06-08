@@ -7,7 +7,6 @@
 
 #include <cstring>
 #include <cstdlib>
-#include <cstdio>
 #include <cmath>
 
 #include <sys/stat.h>
@@ -121,5 +120,18 @@ void GenTreeFileName(int tree_id, char* path, char* file_name) {
 
 template<class T>
 void Sort(T* begin, T* end) {
-
+    if (begin < end) {
+        T key = *begin;
+        T* left = begin;
+        T* right = end;
+        while (left < right) {
+            while (left < right && (*right) >= key) right--;
+            if (left < right) *(left++) = *right;
+            while (left < right && (*left) <  key) left++;
+            if (left < right) *(right--) = *left;
+        }
+        *left = key;
+        Sort(begin, left - 1);
+        Sort(left + 1, end);
+    }
 }

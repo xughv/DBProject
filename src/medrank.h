@@ -2,6 +2,7 @@
 #define _MED_RANK_H_
 
 #include "b_tree.h"
+#include <cstring>
 
 class MEDRANK {
 public:
@@ -20,7 +21,14 @@ public:
 
     float* GetLine(int index);
 
+    void GenH();
+    void GenL();
+
+    void InitVotes();
+    int Vote(int candidate);
+
     int num_line();
+    int dim_line();
 
     void set_q(int index, float value);
 private:
@@ -36,6 +44,8 @@ private:
     int num_line_;
     int dim_line_;
     float** lines_;
+
+    int* votes_;
 };
 
 #endif // _MEDRANK_H_

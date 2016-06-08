@@ -1,5 +1,6 @@
 #include "ann.h"
 #include <cstring>
+#include <cstdlib>
 
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
@@ -69,17 +70,47 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
     if (!ReadSetFromFile(query_set, num, dim, data)) {
         // TODO: Error
     } else {
-
+        int num_line_ = 50;  // 50条线
         MEDRANK* medrank = MEDRANK::GetInstance();
-        medrank->Init();
+        medrank->Init("result");
 
+        // 生成随机线段
+        // 第一个参数为线段的维数（就是点的数量num）
+        medrank->GenLines(num, num_line_);
 
-
+        // 初始化查询条件的投影
         for (int i = 0; i < num; ++i) {
             for (int j = 0; j < medrank->num_line(); ++j) {
                 medrank->set_q(j, CalcProjection(dim, data[i], medrank->GetLine(j)));
             }
         }
 
+        // 初始化l, h
+        medrank->GenH();
+        medrank->GenL();
+
+        // 初始化候选人票数为0
+        medrank->InitVotes();
+
+        // 遍历所有线段
+        for (int i = 0; i < num_line_; ++i) {
+            float h_dis = abs(); // h的点与q的点的距离差（我不知道怎么获取节点的投影..）
+            float l_dis = abs();
+
+            if (h_dis <= l_dis) {
+                int result = medrank->Vote(h_[i]); // 如果有票数过半的候选人就返回候选人，否则返回-1
+
+                if (result != -1) {
+                    // 已找到
+                }
+
+            } else if (h_dis > l_dis) {
+                int result = medrank->Vote(l_[i]); // 如果有票数过半的候选人就返回候选人，否则返回-1
+
+                if (result != -1) {
+                    // 已找到
+                }
+            }
+        }
     }
 }
