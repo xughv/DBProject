@@ -31,6 +31,12 @@ public:
     void BulkLoad(Pair* pairs, int num);
 
     // -------------------------------------------------------------------------
+    // 搜索最接近查询的节点（小于）
+    int SearchH(float q_projection);
+    // 搜索最接近查询的节点（大于）
+    int SearchL(float q_projection);
+
+    // -------------------------------------------------------------------------
     // get <file_>
     BlockFile* file() const;
 
