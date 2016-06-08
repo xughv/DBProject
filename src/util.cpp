@@ -75,7 +75,7 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
 float CalcProjection(int dim, unsigned* object, float* line) {
     float length = 0.0f;
     for (int i = 0; i < dim; ++i) {
-        length += object[i] * line[i];
+        length += (float)object[i] * line[i];
     }
     return length;
 }
@@ -117,4 +117,9 @@ void GenTreeFileName(int tree_id, char* path, char* file_name) {
     sprintf(tmp, "%d", tree_id);
     strcat(file_name, tmp);
     strcat(file_name, ".index");
+}
+
+template<class T>
+void Sort(T* begin, T* end) {
+
 }

@@ -16,13 +16,13 @@ MEDRANK::~MEDRANK() {
 
 }
 
-void MEDRANK::GenLines(int dim, int num_line) {
+void MEDRANK::GenLines(int dim_line, int num_line) {
     num_line_ = num_line;
-    dim_ = dim;
+    dim_line_ = dim_line;
     lines_ = new float*[num_line];
     for (int i = 0; i < num_line; ++i) {
-        lines_[i] = new float[dim];
-        GenRandomVector(dim, lines_[i]);
+        lines_[i] = new float[dim_line];
+        GenRandomVector(dim_line, lines_[i]);
     }
 }
 
@@ -31,5 +31,14 @@ float* MEDRANK::GetLine(int index) {
 }
 
 void MEDRANK::Init(char *output_folder) {
+    q_ = new float[num_line_];
+    
+}
 
+int MEDRANK::num_line() {
+    return num_line_;
+}
+
+void MEDRANK::set_q(int index, float value) {
+    q_[index] = value;
 }

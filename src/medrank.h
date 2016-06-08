@@ -19,11 +19,13 @@ public:
     void GenLines(int dim, int num_line);
 
     float* GetLine(int index);
+
+    int num_line();
+
+    void set_q(int index, float value);
 private:
     // constructor
     MEDRANK();
-
-    int dim_;
 
     int* h_;
     int* l_;
@@ -32,6 +34,7 @@ private:
     BTree** trees_;
 
     int num_line_;
+    int dim_line_;
     float** lines_;
 };
 

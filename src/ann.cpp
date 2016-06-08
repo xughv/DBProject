@@ -25,17 +25,18 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         }
 
         MEDRANK* medrank = MEDRANK::GetInstance();
-
-        medrank->GenLines(dim, num_line);
+        medrank->GenLines(num, num_line);
 
         Pair* pairs = new Pair[num];
 
         char* file_name = new char[20];
 
         for (int i = 0; i < num_line; ++i) {
-
-            pairs[i].SetValue(i, CalcProjection(dim, data[i], medrank->GetLine(i)));
-            // std::sort(pairs, pairs + num);
+            for (int j = 0; j < num; ++j) {
+                pairs[j].SetValue(j, CalcProjection(dim, data[j], medrank->GetLine(i)));
+            }
+            // sort
+            Sort(pairs, pairs + num);
 
             // generate the file name of the b-tree
             GenTreeFileName(i, index_path, file_name);
@@ -68,6 +69,17 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
     if (!ReadSetFromFile(query_set, num, dim, data)) {
         // TODO: Error
     } else {
+
+        MEDRANK* medrank = MEDRANK::GetInstance();
+        medrank->Init();
+
+
+
+        for (int i = 0; i < num; ++i) {
+            for (int j = 0; j < medrank->num_line(); ++j) {
+                medrank->set_q(j, CalcProjection(dim, data[i], medrank->GetLine(j)));
+            }
+        }
 
     }
 }
