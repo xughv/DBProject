@@ -220,12 +220,15 @@ void BTree::BulkLoad(Pair* pairs, int num) {
     }
 }
 
-
 // -------------------------------------------------------------------------
-int BTree::SearchH(float q_projection) {
+// find predecessor of a key
+// cursor (return)
+void BTree::GetPre(float key, Cursor& cursor) {
 
 }
 
-int BTree::SearchL(float q_projection) {
+// find successor of a key
+// cursor (return)
+void BTree::GetSucc(float key, Cursor& cursor) {
 
 }

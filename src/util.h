@@ -5,6 +5,7 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 #include <cstdio>
+#include "b_node.h"
 
 // -----------------------------------------------------------------------------
 //  Pair: structure of a set of pairs
@@ -22,9 +23,41 @@ public:
     bool operator <(Pair &pair) const {
         return this->projection() < pair.projection();
     }
+
 private:
     int id_;                            // object id
     float projection_;                  // projection of the object
+};
+
+
+class Cursor {
+public:
+    void SetValue(BNode* node, int index, int id, float projection) {
+        node_ = node;
+        index_ = index;
+        pair.SetValue(id, projection);
+    }
+
+    BNode* node() const { return node_; }
+    int index() const { return index_; }
+    int id() const { return pair.id(); }
+    float projection() const { return pair.projection(); }
+
+    // 前缀自加重载
+    Cursor& operator ++() {
+
+        return *this;
+    }
+
+    // 前缀自减重载
+    Cursor& operator --() {
+
+        return *this;
+    }
+private:
+    BNode* node_;
+    int index_;
+    Pair pair;
 };
 
 float Rand();
