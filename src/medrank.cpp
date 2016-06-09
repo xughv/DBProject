@@ -40,14 +40,14 @@ void MEDRANK::Init(char *output_folder) {
     h_ = new Cursor[num_line_];
     for (int i = 0; i < num_line_; ++i) {
         // get predecessor in h[i]
-        trees_[i]->GetPre(q_[i], h_[i]);
+        trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
     }
 
     // initial l_
     l_ = new Cursor[num_line_];
     for (int i = 0; i < num_line_; ++i) {
         // get successor in h[i]
-        trees_[i]->GetSucc(q_[i], l_[i]);
+        trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
     }
 
     // reset all votes

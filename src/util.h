@@ -32,17 +32,22 @@ private:
 
 class Cursor {
 public:
-    void SetValue(BNode* node, int index, int id, float projection) {
-        node_ = node;
+    void SetValue(int node_block, int index, int id, float projection) {
+        node_block_ = node_block;
         index_ = index;
         pair.SetValue(id, projection);
+        invalid_ = false;
     }
 
-    BNode* node() const { return node_; }
+    void SetInvalid() {
+        invalid_ = true;
+    }
+
+    int node_block() const { return node_block_; }
     int index() const { return index_; }
     int id() const { return pair.id(); }
     float projection() const { return pair.projection(); }
-
+    bool invalid() const { return invalid_; }
     // 前缀自加重载
     Cursor& operator ++() {
 
@@ -55,9 +60,11 @@ public:
         return *this;
     }
 private:
-    BNode* node_;
+    int node_block_;
     int index_;
     Pair pair;
+
+    bool invalid_;
 };
 
 float Rand();

@@ -32,12 +32,12 @@ public:
     void BulkLoad(Pair* pairs, int num);
 
     // -------------------------------------------------------------------------
-    // find predecessor of a key
+    // get cursor not greater than key
     // cursor (return)
-    void GetPre(float key, Cursor& cursor);
-    // find successor of a key
+    bool GetCursorNotGreaterThanKey(float key, Cursor &cursor);
+    // get cursor greater than key
     // cursor (return)
-    void GetSucc(float key, Cursor& cursor);
+    bool GetCursorGreaterThanKey(float key, Cursor &cursor);
 
     // -------------------------------------------------------------------------
     // get <file_>
