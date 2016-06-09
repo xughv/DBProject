@@ -5,19 +5,21 @@
 
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
+    // 新建data数据unsigned型二维数组
     unsigned** data = new unsigned*[num];
     for (int i = 0; i < num; i++) {
         data[i] = new unsigned[dim];
         memset(data[i], 0, sizeof(unsigned) * dim);
     }
 
+    // 从文件获取数据至data二维数组
     if (!ReadSetFromFile(data_set, num, dim, data)) {
         // TODO: Error
         printf("Read DataSet Failed.\n");
     } else {
 
+        // 构建路径名称
         char* index_path = new char[strlen(output_folder) + 20];
-
         strcpy(index_path, output_folder);
         strcat(index_path, "index/");
 
@@ -27,8 +29,11 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         }
 
         MEDRANK* medrank = MEDRANK::GetInstance();
+
+        // 生成随机线段，参数（线的维数，线的数量）
         medrank->GenLines(dim, num_line);
 
+        // 生成num对<id, projection>
         Pair* pairs = new Pair[num];
 
         char* file_name = new char[20];
