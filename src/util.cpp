@@ -118,24 +118,6 @@ void GenTreeFileName(int tree_id, char* path, char* file_name) {
     strcat(file_name, ".index");
 }
 
-template<class T>
-void Sort(T* begin, T* end) {
-    if (begin < end) {
-        T key = *begin;
-        T* left = begin;
-        T* right = end;
-        while (left < right) {
-            while (left < right && (*right) >= key) right--;
-            if (left < right) *(left++) = *right;
-            while (left < right && (*left) <  key) left++;
-            if (left < right) *(right--) = *left;
-        }
-        *left = key;
-        Sort(begin, left - 1);
-        Sort(left + 1, end);
-    }
-}
-
 float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim) {
     float dis = 0;
     for (int i = 0; i < dim; ++i) {
@@ -145,4 +127,8 @@ float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim) {
     dis = sqrtf(dis);
 
     return dis;
+}
+
+int Compare(const void *a , const void *b) {
+    return *(Pair *)a - *(Pair *)b;
 }

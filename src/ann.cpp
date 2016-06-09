@@ -1,7 +1,5 @@
 #include "ann.h"
-#include <cstring>
 #include <cstdlib>
-#include <cmath>
 
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
@@ -43,7 +41,8 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
                 pairs[j].SetValue(j, CalcProjection(dim, data[j], medrank->GetLine(i)));
             }
             // sort
-            Sort(pairs, pairs + num);
+            qsort(pairs, num, sizeof(Pair), Compare);
+
 
             // generate the file name of the b-tree
             GenTreeFileName(i, index_path, file_name);
