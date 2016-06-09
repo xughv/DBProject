@@ -20,8 +20,8 @@ public:
         projection_ = projection;
     }
 
-    bool operator <(Pair &pair) const {
-        return this->projection() < pair.projection();
+    int operator -(Pair &pair) const {
+        return this->projection() - pair.projection();
     }
 
 private:
@@ -139,7 +139,6 @@ bool CreateDirectory(const char* path);
 
 void GenTreeFileName(int tree_id, char* path, char* file_name);
 
-template<class T>
-void Sort(T* begin, T* end);
+int Compare(const void *a , const void *b);
 
 #endif // _UTIL_H_
