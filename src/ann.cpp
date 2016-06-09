@@ -29,8 +29,11 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         }
 
         MEDRANK* medrank = MEDRANK::GetInstance();
+<<<<<<< HEAD
 
         // 生成随机线段，参数（线的维数，线的数量）
+=======
+>>>>>>> refs/remotes/origin/master
         medrank->GenLines(dim, num_line);
 
         Pair* pairs = new Pair[num];
@@ -76,14 +79,9 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
     if (!ReadSetFromFile(query_set, num, dim, query_data)) {
         // TODO: Error
     } else {
-        int num_line_ = 50;  // 50条线
+
         MEDRANK* medrank = MEDRANK::GetInstance();
-
-        medrank->Init("result");
-
-        // 生成随机线段
-        // 第一个参数为线段的维数（就是点的数量num）
-        medrank->GenLines(num, num_line_);
+        medrank->Init();
 
         // 初始化查询条件的投影
         for (int i = 0; i < num; ++i) {
@@ -97,7 +95,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
         // 输出到文件
         char* file_name = new char[20];
         strcpy(file_name, output_folder);
-        strcat(file_name, "Medrank.out");
+        strcat(file_name, "medrank.out");
 
         // open data file
         FILE* fp = fopen(file_name, "w");

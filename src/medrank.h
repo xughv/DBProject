@@ -15,7 +15,10 @@ public:
     // destructor
     ~MEDRANK();
     // -------------------------------------------------------------------------
-    void Init(char* output_folder);
+    void Init();
+
+    void Reset();
+
     int GoGoGo();
 
     void GenLines(int dim, int num_line);
@@ -25,7 +28,6 @@ public:
     int Vote(int candidate);
 
     int num_line();
-    int dim_line();
 
     void set_q(int index, float value);
 
@@ -38,7 +40,6 @@ private:
     Cursor* l_;
 
     float* q_;
-    char* index_path_;
     BTree** trees_;
 
     int num_line_;

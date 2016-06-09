@@ -32,10 +32,11 @@ private:
 
 class Cursor {
 public:
-    void SetValue(int node_block, int index, int id, float projection) {
+    void SetValue(int node_block, int index, int id, float projection, BTree* tree) {
         node_block_ = node_block;
         index_ = index;
         pair.SetValue(id, projection);
+        tree_ = tree;
         invalid_ = false;
     }
 
@@ -48,14 +49,69 @@ public:
     int id() const { return pair.id(); }
     float projection() const { return pair.projection(); }
     bool invalid() const { return invalid_; }
+
     // 前缀自加重载
     Cursor& operator ++() {
+        int pos = index_;
+        BNode* cur_node = new BNode();
+
+        cur_node->InitFromFile(tree_, index_);
+
+        // get the first key which greater than key
+        if (pos + 1 < cur_node->num_entries()) {
+            // in same node
+            pos++;
+        } else {
+            // in right_sibling node
+            int block = cur_node->right_sibling();
+            if (block < 0) {
+                // current node don't have right_sibling
+                this->SetInvalid();
+                return *this;
+            }
+            BNode* tmp_node = new BNode();
+            tmp_node->InitFromFile(tree_, block);
+            cur_node = tmp_node;
+            // pos at first in right_sibling
+            pos = 0;
+        }
+
+        // get result
+        this->SetValue(cur_node->block(), pos,
+                        cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
 
         return *this;
     }
 
     // 前缀自减重载
     Cursor& operator --() {
+        int pos = index_;
+        BNode* cur_node = new BNode();
+
+        cur_node->InitFromFile(tree_, index_);
+
+        // get the first key which less than key
+        if (pos > 0) {
+            // in same node
+            pos--;
+        } else {
+            // in left_sibling node
+            int block = cur_node->left_sibling();
+            if (block < 0) {
+                // current node don't have left_sibling
+                this->SetInvalid();
+                return *this;
+            }
+            BNode* tmp_node = new BNode();
+            tmp_node->InitFromFile(tree_, block);
+            cur_node = tmp_node;
+            // pos at last in left_sibling
+            pos = cur_node->num_entries() - 1;
+        }
+
+        // get result
+        this->SetValue(cur_node->block(), pos,
+                       cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
 
         return *this;
     }
@@ -65,6 +121,8 @@ private:
     Pair pair;
 
     bool invalid_;
+
+    BTree* tree_;
 };
 
 float Rand();

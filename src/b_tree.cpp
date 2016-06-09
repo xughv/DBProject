@@ -255,7 +255,7 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor &cursor) {
 
     // get result
     cursor.SetValue(cur_node->block(), pos,
-                    cur_node->GetSon(pos), cur_node->GetKey(pos));
+                    cur_node->GetSon(pos), cur_node->GetKey(pos), this);
     return true;
 }
 
@@ -314,7 +314,7 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor &cursor) {
 
     // get result
     cursor.SetValue(cur_node->block(), pos,
-                    cur_node->GetSon(pos), cur_node->GetKey(pos));
+                    cur_node->GetSon(pos), cur_node->GetKey(pos), this);
 
     //  Release space
     if (tmp_node != NULL) {
