@@ -29,13 +29,11 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         }
 
         MEDRANK* medrank = MEDRANK::GetInstance();
-<<<<<<< HEAD
 
         // 生成随机线段，参数（线的维数，线的数量）
-=======
->>>>>>> refs/remotes/origin/master
         medrank->GenLines(dim, num_line);
 
+        // 生成num对<id, projection>
         Pair* pairs = new Pair[num];
 
         char* file_name = new char[20];
