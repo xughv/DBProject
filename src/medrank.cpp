@@ -3,6 +3,8 @@
 
 MEDRANK::MEDRANK() {
 
+    num_line_ = -1;
+
     h_ = l_ = NULL;
     q_ = NULL;
     index_path_ = NULL;
@@ -33,7 +35,32 @@ float* MEDRANK::GetLine(int index) {
 
 void MEDRANK::Init(char *output_folder) {
     q_ = new float[num_line_];
-    
+
+    h_ = new Cursor[num_line_];
+    for (int i = 0; i < num_line_; ++i) {
+        // get predecessor in h[i]
+        trees_[i]->GetPre(q_[i], h_[i]);
+    }
+
+    l_ = new Cursor[num_line_];
+    for (int i = 0; i < num_line_; ++i) {
+        // get successor in h[i]
+        trees_[i]->GetSucc(q_[i], l_[i]);
+    }
+
+    // reset all votes
+    votes_ = new int[dim_line_];
+    memset(votes_, 0, sizeof(int) * dim_line_);
+}
+
+int MEDRANK::Vote(int candidate) {
+    votes_[candidate]++;
+    // 如果候选人的票数超过线段数量的一半，返回候选人的号码，否则返回-1
+    if (votes_[candidate] >= num_line_/2) {
+        return candidate;
+    } else {
+        return -1;
+    }
 }
 
 int MEDRANK::num_line() {
@@ -46,37 +73,4 @@ int MEDRANK::dim_line() {
 
 void MEDRANK::set_q(int index, float value) {
     q_[index] = value;
-}
-
-void MEDRANK::GenH() {
-    h_ = new int[num_line_];
-    for (int i = 0; i < num_line_; ++i) {
-        h_[i] = trees_[i]->SearchH(q_[i]);
-    }
-}
-
-void MEDRANK::GenL() {
-    l_ = new int[num_line_];
-    for (int i = 0; i < num_line_; ++i) {
-        l_[i] = trees_[i]->SearchL(q_[i]);
-    }
-}
-
-int MEDRANK::Vote(int candidate) {
-    votes_[candidate]++;
-
-    // 如果候选人的票数超过线段数量的一半，返回候选人的号码，否则返回-1
-    if (votes_[candidate] >= num_line_/2) {
-        return candidate;
-    } else {
-        return -1;
-    }
-}
-
-void MEDRANK::InitVotes() {
-    // 候选人的数量就是线段的维数
-    votes_ = new int[dim_line_];
-
-    // 初始化所有候选人的票数为0
-    memset(votes_, 0, sizeof(int) * dim_line_);
 }

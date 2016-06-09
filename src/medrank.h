@@ -21,22 +21,24 @@ public:
 
     float* GetLine(int index);
 
-    void GenH();
-    void GenL();
+    Cursor& GetH(int index);
+    Cursor& GetL(int index);
 
-    void InitVotes();
     int Vote(int candidate);
 
     int num_line();
     int dim_line();
 
     void set_q(int index, float value);
+
+
 private:
     // constructor
     MEDRANK();
 
-    int* h_;
-    int* l_;
+    Cursor* h_;
+    Cursor* l_;
+
     float* q_;
     char* index_path_;
     BTree** trees_;

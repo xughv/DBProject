@@ -3,6 +3,7 @@
 
 #include "block_file.h"
 #include "util.h"
+#include "b_node.h"
 
 class BNode;
 
@@ -31,10 +32,12 @@ public:
     void BulkLoad(Pair* pairs, int num);
 
     // -------------------------------------------------------------------------
-    // 搜索最接近查询的节点（小于）
-    int SearchH(float q_projection);
-    // 搜索最接近查询的节点（大于）
-    int SearchL(float q_projection);
+    // find predecessor of a key
+    // cursor (return)
+    void GetPre(float key, Cursor& cursor);
+    // find successor of a key
+    // cursor (return)
+    void GetSucc(float key, Cursor& cursor);
 
     // -------------------------------------------------------------------------
     // get <file_>
