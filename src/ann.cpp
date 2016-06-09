@@ -93,7 +93,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
 //        printf("Calc Res\n");
 
         // 输出到文件
-        char* file_name = new char[20];
+        char* file_name = new char[strlen(output_folder) + 20];
         strcpy(file_name, output_folder);
         strcat(file_name, "medrank.out");
 

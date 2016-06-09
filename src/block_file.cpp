@@ -105,7 +105,10 @@ BlockFile::~BlockFile() {
         delete[] file_name_;
         file_name_ = NULL;
     }
-    if (fp_) fclose(fp_); // close <fp_>
+    if (fp_ != NULL) {
+        fclose(fp_);
+        fp_ = NULL;
+    } // close <fp_>
 }
 
 // -----------------------------------------------------------------------------

@@ -239,6 +239,7 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
         int block = cur_node->GetSon(pos);
 
         delete tmp_node;
+
         tmp_node = new BNode();
         tmp_node->InitFromFile(this, block);
         cur_node = tmp_node;
