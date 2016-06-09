@@ -3,6 +3,7 @@
 
 #include "block_file.h"
 #include "util.h"
+#include "b_node.h"
 
 class BNode;
 

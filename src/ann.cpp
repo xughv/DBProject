@@ -72,6 +72,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
     } else {
         int num_line_ = 50;  // 50条线
         MEDRANK* medrank = MEDRANK::GetInstance();
+
         medrank->Init("result");
 
         // 生成随机线段
@@ -80,6 +81,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
 
         // 初始化查询条件的投影
         for (int i = 0; i < num; ++i) {
+            // Calc q
             for (int j = 0; j < medrank->num_line(); ++j) {
                 medrank->set_q(j, CalcProjection(dim, data[i], medrank->GetLine(j)));
             }

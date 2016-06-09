@@ -3,6 +3,8 @@
 
 MEDRANK::MEDRANK() {
 
+    num_line_ = -1;
+
     h_ = l_ = NULL;
     q_ = NULL;
     index_path_ = NULL;
@@ -33,7 +35,7 @@ float* MEDRANK::GetLine(int index) {
 
 void MEDRANK::Init(char *output_folder) {
     q_ = new float[num_line_];
-    
+
 }
 
 int MEDRANK::num_line() {
