@@ -34,10 +34,10 @@ public:
     // -------------------------------------------------------------------------
     // get cursor not greater than key
     // cursor (return)
-    bool GetCursorNotGreaterThanKey(float key, Cursor &cursor);
+    bool GetCursorNotGreaterThanKey(float key, Cursor* cursor);
     // get cursor greater than key
     // cursor (return)
-    bool GetCursorGreaterThanKey(float key, Cursor &cursor);
+    bool GetCursorGreaterThanKey(float key, Cursor* cursor);
 
     // -------------------------------------------------------------------------
     // get <file_>

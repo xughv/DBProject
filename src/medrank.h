@@ -36,8 +36,8 @@ private:
     // constructor
     MEDRANK();
 
-    Cursor* h_;
-    Cursor* l_;
+    Cursor** h_;
+    Cursor** l_;
 
     float* q_;
     BTree** trees_;

@@ -16,25 +16,26 @@ MEDRANK::MEDRANK() {
 }
 
 MEDRANK::~MEDRANK() {
-
-    delete h_;
-    h_ = NULL;
-
-    delete l_;
-    l_ = NULL;
-
     delete q_;
     q_ = NULL;
 
     for (int i = 0; i < num_line_; i++) {
         delete[] lines_[i];
         delete trees_[i];
+        delete h_[i];
+        delete l_[i];
     }
     delete[] lines_;
     lines_ = NULL;
 
     delete[] trees_;
     trees_ = NULL;
+
+    delete h_;
+    h_ = NULL;
+
+    delete l_;
+    l_ = NULL;
 }
 
 void MEDRANK::GenLines(int dim_line, int num_line) {
@@ -56,10 +57,10 @@ void MEDRANK::Init(char *output_folder) {
     q_ = new float[num_line_];
 
     // initial <h_>
-    h_ = new Cursor[num_line_];
+    h_ = new Cursor*[num_line_];
 
     // initial <l_>
-    l_ = new Cursor[num_line_];
+    l_ = new Cursor*[num_line_];
 
     // reset all votes
     votes_ = new int[dim_line_];
@@ -78,6 +79,9 @@ void MEDRANK::Init(char *output_folder) {
 
         trees_[i] = new BTree();
         trees_[i]->InitFromFile(file_name);
+
+        h_[i] = new Cursor();
+        l_[i] = new Cursor();
     }
 
     delete[] index_path;
@@ -114,20 +118,20 @@ int MEDRANK::GoGoGo() {
     for (int i = 0; i < num_line_; ++i) {
         float h_dis = FLT_MAX;
         float l_dis = FLT_MAX;
-        if (!h_[i].invalid()) h_dis = q_[i] - h_[i].projection();
-        if (!l_[i].invalid()) l_dis = l_[i].projection() - q_[i];
+        if (!h_[i]->invalid()) h_dis = q_[i] - h_[i]->projection();
+        if (!l_[i]->invalid()) l_dis = l_[i]->projection() - q_[i];
 
         if (h_dis <= l_dis) {
-            int result = Vote(h_[i].id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
-            --h_[i];
+            int result = Vote(h_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+            --(*h_[i]);
             if (result != -1) {
                 // 已找到
                 return result;
             }
 
         } else {
-            int result = Vote(l_[i].id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
-            ++l_[i];
+            int result = Vote(l_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+            ++(*l_[i]);
             if (result != -1) {
                 // 已找到
                 return result;
