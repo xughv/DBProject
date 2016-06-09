@@ -16,7 +16,7 @@ public:
     ~MEDRANK();
     // -------------------------------------------------------------------------
     void Init(char* output_folder);
-    void GoGoGO();
+    int GoGoGo();
 
     void GenLines(int dim, int num_line);
 

@@ -63,6 +63,7 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
 void CalcANN(int num, int dim, char* query_set, char* output_folder) {
 
     unsigned **query_data = new unsigned *[num];
+    int* result = new int[num];
     for (int i = 0; i < num; i++) {
         query_data[i] = new unsigned[dim];
         memset(query_data[i], 0, sizeof(query_data[i]) * dim);
@@ -86,11 +87,36 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
             for (int j = 0; j < medrank->num_line(); ++j) {
                 medrank->set_q(j, CalcProjection(dim, query_data[i], medrank->GetLine(j)));
             }
-
-            medrank->GoGoGO();
+            result[i] = medrank->GoGoGo();
         }
 
+        // 输出到文件
+        char* file_name = new char[20];
+        strcpy(file_name, output_folder);
+        strcat(file_name, "Medrank.out");
+
+        // open data file
+        FILE* fp = fopen(file_name, "w");
+
+        if (!fp) {
+            printf("I could not open %s.\n", file_name);
+            return;
+        }
+
+        for (int i = 0; i < num; ++i) {
+            fprintf(fp, "%d\n", result[i]);
+        }
+
+        fclose(fp);
+
+        delete[] result;
     }
+
+    // 清除查询数据二维指针
+    for (int i = 0; i < num; i++) {
+        delete[] query_data[i];
+    }
+    delete [] query_data;
 }
 
 void LinearScan(int num, int dim, char* query_set, char* data_set) {
@@ -110,16 +136,14 @@ void LinearScan(int num, int dim, char* query_set, char* data_set) {
         memset(db_data[i], 0, sizeof(unsigned) * dim);
     }
 
-    if (!ReadSetFromFile(query_set, num_q_data, dim, q_data) && !ReadSetFromFile(data_set, num, dim, db_data)) {
+    if (!ReadSetFromFile(query_set, num_q_data, dim, q_data)) {
+        // TODO: Error
+    } else if (!ReadSetFromFile(data_set, num, dim, db_data)) {
         // TODO: Error
     } else {
         float min_dis = FLT_MAX;
-        unsigned** min_point = new unsigned*[num_q_data];
-        for (int i = 0; i < num_q_data; i++) {
-            min_point[i] = new unsigned[dim];
-            memset(min_point[i], 0, sizeof(min_point[i]) * dim);
-        }
-
+        int *min_point_index = new int[num_q_data];
+        memset(min_point_index, 0, sizeof(min_point_index) * num_q_data);
 
         for (int i = 0; i < num_q_data; ++i) {
             min_dis = FLT_MAX;
@@ -127,9 +151,31 @@ void LinearScan(int num, int dim, char* query_set, char* data_set) {
                 float dis = CalcPointsDistance(q_data[i], db_data[j], dim);
                 if (min_dis > dis) {
                     min_dis = dis;
-                    min_point[i] = db_data[j];
+                    min_point_index[i] = j;
                 }
             }
         }
+
+        for (int i = 0; i < 100; ++i) {
+            printf("num: %d , id: %d\n", i, min_point_index[i]);
+        }
+
+
+        // 清除min_point_index指针
+        delete [] min_point_index;
+
     }
+
+    // 清除查询数据二维指针
+    for (int i = 0; i < num_q_data; i++) {
+        delete[] q_data[i];
+    }
+    delete [] q_data;
+
+    // 清除数据二维指针
+    for (int i = 0; i < num; i++) {
+        delete[] db_data[i];
+    }
+    delete [] db_data;
+
 }
