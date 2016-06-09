@@ -75,6 +75,8 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas);
 
 float CalcProjection(int dim, unsigned* object, float* line);
 
+float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim);
+
 bool CreateDirectory(const char* path);
 
 void GenTreeFileName(int tree_id, char* path, char* file_name);
