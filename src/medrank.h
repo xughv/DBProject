@@ -16,13 +16,11 @@ public:
     ~MEDRANK();
     // -------------------------------------------------------------------------
     void Init(char* output_folder);
+    void GoGoGO();
 
     void GenLines(int dim, int num_line);
 
     float* GetLine(int index);
-
-    Cursor& GetH(int index);
-    Cursor& GetL(int index);
 
     int Vote(int candidate);
 

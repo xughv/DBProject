@@ -135,3 +135,14 @@ void Sort(T* begin, T* end) {
         Sort(left + 1, end);
     }
 }
+
+float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim) {
+    float dis = 0;
+    for (int i = 0; i < dim; ++i) {
+        dis += (point1[i] - point2[i])*(point1[i] - point2[i]);
+    }
+
+    dis = sqrtf(dis);
+
+    return dis;
+}

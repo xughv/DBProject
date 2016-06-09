@@ -36,12 +36,14 @@ float* MEDRANK::GetLine(int index) {
 void MEDRANK::Init(char *output_folder) {
     q_ = new float[num_line_];
 
+    // initial h_
     h_ = new Cursor[num_line_];
     for (int i = 0; i < num_line_; ++i) {
         // get predecessor in h[i]
         trees_[i]->GetPre(q_[i], h_[i]);
     }
 
+    // initial l_
     l_ = new Cursor[num_line_];
     for (int i = 0; i < num_line_; ++i) {
         // get successor in h[i]
@@ -73,4 +75,27 @@ int MEDRANK::dim_line() {
 
 void MEDRANK::set_q(int index, float value) {
     q_[index] = value;
+}
+
+void MEDRANK::GoGoGO() {
+    // 遍历所有线段
+    for (int i = 0; i < num_line_; ++i) {
+        float h_dis = q_[i] - h_[i].projection();
+        float l_dis = l_[i].projection() - q_[i];
+
+        if (h_dis <= l_dis) {
+            int result = Vote(h_[i].id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+
+            if (result != -1) {
+                // 已找到
+            }
+
+        } else if (h_dis > l_dis) {
+            int result = Vote(l_[i].id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+
+            if (result != -1) {
+                // 已找到
+            }
+        }
+    }
 }

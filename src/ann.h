@@ -8,6 +8,6 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
 
 void CalcANN(int num, int dim, char* query_set, char* output_folder);
 
-void LinearScan();
+void LinearScan(int num, int dim, char* query_set);
 
 #endif // _ANN_H_

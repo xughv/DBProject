@@ -1,6 +1,7 @@
 #include "ann.h"
 #include <cstring>
 #include <cstdlib>
+#include <cmath>
 
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
@@ -61,13 +62,13 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
 
 void CalcANN(int num, int dim, char* query_set, char* output_folder) {
 
-    unsigned **data = new unsigned *[num];
+    unsigned **query_data = new unsigned *[num];
     for (int i = 0; i < num; i++) {
-        data[i] = new unsigned[dim];
-        memset(data[i], 0, sizeof(data[i]) * dim);
+        query_data[i] = new unsigned[dim];
+        memset(query_data[i], 0, sizeof(query_data[i]) * dim);
     }
 
-    if (!ReadSetFromFile(query_set, num, dim, data)) {
+    if (!ReadSetFromFile(query_set, num, dim, query_data)) {
         // TODO: Error
     } else {
         int num_line_ = 50;  // 50条线
@@ -83,34 +84,50 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
         for (int i = 0; i < num; ++i) {
             // Calc q
             for (int j = 0; j < medrank->num_line(); ++j) {
-                medrank->set_q(j, CalcProjection(dim, data[i], medrank->GetLine(j)));
+                medrank->set_q(j, CalcProjection(dim, query_data[i], medrank->GetLine(j)));
             }
+
+            medrank->GoGoGO();
         }
 
-        // 初始化l, h
-        medrank->GenH();
-        medrank->GenL();
+    }
+}
 
-        // 初始化候选人票数为0
-        medrank->InitVotes();
+void LinearScan(int num, int dim, char* query_set, char* data_set) {
 
-        // 遍历所有线段
-        for (int i = 0; i < num_line_; ++i) {
-            float h_dis = abs(); // h的点与q的点的距离差（我不知道怎么获取节点的投影..）
-            float l_dis = abs();
+    // 读取查询数据
+    int num_q_data = 100;
+    unsigned **q_data = new unsigned *[num_q_data];
+    for (int i = 0; i < num_q_data; i++) {
+        q_data[i] = new unsigned[dim];
+        memset(q_data[i], 0, sizeof(q_data[i]) * dim);
+    }
 
-            if (h_dis <= l_dis) {
-                int result = medrank->Vote(h_[i]); // 如果有票数过半的候选人就返回候选人，否则返回-1
+    // 读取数据
+    unsigned** db_data = new unsigned*[num];
+    for (int i = 0; i < num; i++) {
+        db_data[i] = new unsigned[dim];
+        memset(db_data[i], 0, sizeof(unsigned) * dim);
+    }
 
-                if (result != -1) {
-                    // 已找到
-                }
+    if (!ReadSetFromFile(query_set, num_q_data, dim, q_data) && !ReadSetFromFile(data_set, num, dim, db_data)) {
+        // TODO: Error
+    } else {
+        float min_dis = FLT_MAX;
+        unsigned** min_point = new unsigned*[num_q_data];
+        for (int i = 0; i < num_q_data; i++) {
+            min_point[i] = new unsigned[dim];
+            memset(min_point[i], 0, sizeof(min_point[i]) * dim);
+        }
 
-            } else if (h_dis > l_dis) {
-                int result = medrank->Vote(l_[i]); // 如果有票数过半的候选人就返回候选人，否则返回-1
 
-                if (result != -1) {
-                    // 已找到
+        for (int i = 0; i < num_q_data; ++i) {
+            min_dis = FLT_MAX;
+            for (int j = 0; j < num; ++j) {
+                float dis = CalcPointsDistance(q_data[i], db_data[j], dim);
+                if (min_dis > dis) {
+                    min_dis = dis;
+                    min_point[i] = db_data[j];
                 }
             }
         }
