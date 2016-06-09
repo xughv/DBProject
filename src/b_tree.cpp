@@ -221,14 +221,104 @@ void BTree::BulkLoad(Pair* pairs, int num) {
 }
 
 // -------------------------------------------------------------------------
-// find predecessor of a key
+// get cursor not greater than key
 // cursor (return)
-void BTree::GetPre(float key, Cursor& cursor) {
+bool BTree::GetCursorNotGreaterThanKey(float key, Cursor &cursor) {
+    BNode* cur_node = root_ptr_;
+    BNode* tmp_node = NULL;
 
+    // search in index nodes
+    while (cur_node->level() > 0) {
+        int pos = cur_node->FindPositionByKey(key);
+        // check whether the key less than min key or not
+        if (pos < 0) {
+            // key < min_key of the tree
+            cursor.SetInvalid();
+            return false;
+        }
+        // next level
+        int block = cur_node->GetSon(pos);
+        if (tmp_node != NULL) {
+            delete tmp_node;
+        }
+        tmp_node = new BNode();
+        tmp_node->InitFromFile(this, block);
+        cur_node = tmp_node;
+    }
+    //  Release space
+    if (tmp_node != NULL) {
+        delete tmp_node;
+    }
+
+    // search in leaf node
+    int pos = cur_node->FindPositionByKey(key);
+
+    // get result
+    cursor.SetValue(cur_node->block(), pos,
+                    cur_node->GetSon(pos), cur_node->GetKey(pos));
+    return true;
 }
 
-// find successor of a key
+// get cursor greater than key
 // cursor (return)
-void BTree::GetSucc(float key, Cursor& cursor) {
+bool BTree::GetCursorGreaterThanKey(float key, Cursor &cursor) {
+    BNode* cur_node = root_ptr_;
+    BNode* tmp_node = NULL;
 
+    // search in index nodes
+    while (cur_node->level() > 0) {
+        int pos = cur_node->FindPositionByKey(key);
+        // check whether the key less than min key or not
+        if (pos < 0) {
+            // key less than the min key of the tree
+            if (cur_node->num_entries() <= 0) {
+                // current not has no entry
+                cursor.SetInvalid();
+                return false;
+            }
+            // get the min key of the tree
+            return GetCursorNotGreaterThanKey(cur_node->GetKeyOfNode(), cursor);
+        }
+        // next level
+        int block = cur_node->GetSon(pos);
+        if (tmp_node != NULL) {
+            delete tmp_node;
+        }
+        tmp_node = new BNode();
+        tmp_node->InitFromFile(this, block);
+        cur_node = tmp_node;
+    }
+    //  Release space
+    if (tmp_node != NULL) {
+        delete tmp_node;
+    }
+
+    // search in leaf node
+    int pos = cur_node->FindPositionByKey(key);
+    // get the first key which greater than key
+    if (pos + 1 < cur_node->num_entries()) {
+        // in same node
+        pos++;
+    } else {
+        // in right_sibling node
+        int block = cur_node->right_sibling();
+        if (block < 0) {
+            // current node don't have right_sibling
+            cursor.SetInvalid();
+            return false;
+        }
+        tmp_node = new BNode();
+        tmp_node->InitFromFile(this, block);
+        cur_node = tmp_node;
+    }
+
+    // get result
+    cursor.SetValue(cur_node->block(), pos,
+                    cur_node->GetSon(pos), cur_node->GetKey(pos));
+
+    //  Release space
+    if (tmp_node != NULL) {
+        delete tmp_node;
+    }
+    return true;
 }

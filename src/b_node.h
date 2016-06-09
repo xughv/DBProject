@@ -38,7 +38,7 @@ public:
 
     // -------------------------------------------------------------------------
     // get entry size in b-node
-    int getEntrySize();
+    int GetEntrySize();
     
     // find pos just less than input key
     int FindPositionByKey(float key);
@@ -64,10 +64,10 @@ public:
 
     // -------------------------------------------------------------------------
     // get left sibling node
-    BNode* left_sibling();
+    int left_sibling();
 
     // get right sibling node
-    BNode* right_sibling();
+    int right_sibling();
 
     // set <left_sibling>
     void set_left_sibling(BNode* node);

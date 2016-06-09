@@ -50,7 +50,7 @@ void BNode::Init(int level, BTree* btree) {
     dirty_ = true;
 
     int block_length = btree_->file()->block_length();
-    capacity_ = (block_length - GetHeaderSize()) / getEntrySize();
+    capacity_ = (block_length - GetHeaderSize()) / GetEntrySize();
 
     // init <key_>
     key_ = new float[capacity_];
@@ -74,7 +74,7 @@ void BNode::InitFromFile(BTree* btree, int block) {
     btree_ = btree;
 
     int block_length = btree_->file()->block_length();
-    capacity_ = (block_length - GetHeaderSize()) / getEntrySize();
+    capacity_ = (block_length - GetHeaderSize()) / GetEntrySize();
 
     // init <key_>
     key_ = new float[capacity_];
@@ -147,7 +147,7 @@ void BNode::WriteToBuffer(char* buf) {
 
 // -------------------------------------------------------------------------
 // get entry size in b-node
-int BNode::getEntrySize() {
+int BNode::GetEntrySize() {
     return SIZE_FLOAT + SIZE_INT;
 }
 
@@ -217,27 +217,13 @@ void BNode::AddNewChild(float key, int son) {
 
 // -------------------------------------------------------------------------
 // get left sibling node
-BNode* BNode::left_sibling() {
-    BNode* node = NULL;
-    // right sibling node exist
-    if (right_sibling_ != -1) {
-        node = new BNode();
-        // read sibling from disk
-        node->InitFromFile(btree_, left_sibling_);
-    }
-    return node;
+int BNode::left_sibling() {
+    return left_sibling_;
 }
 
 // get right sibling node
-BNode* BNode::right_sibling() {
-    BNode* node = NULL;
-    // right sibling node exist
-    if (right_sibling_ != -1) {
-        node = new BNode();
-        // read sibling from disk
-        node->InitFromFile(btree_, right_sibling_);
-    }
-    return node;
+int BNode::right_sibling() {
+    return right_sibling_;
 }
 
 // set <left_sibling>
