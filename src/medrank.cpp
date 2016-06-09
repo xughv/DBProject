@@ -17,6 +17,24 @@ MEDRANK::MEDRANK() {
 
 MEDRANK::~MEDRANK() {
 
+    delete h_;
+    h_ = NULL;
+
+    delete l_;
+    l_ = NULL;
+
+    delete q_;
+    q_ = NULL;
+
+    for (int i = 0; i < num_line_; i++) {
+        delete[] lines_[i];
+        delete trees_[i];
+    }
+    delete[] lines_;
+    lines_ = NULL;
+
+    delete[] trees_;
+    trees_ = NULL;
 }
 
 void MEDRANK::GenLines(int dim_line, int num_line) {
@@ -33,30 +51,45 @@ float* MEDRANK::GetLine(int index) {
     return lines_[index];
 }
 
-void MEDRANK::Init() {
+void MEDRANK::Init(char *output_folder) {
+
     q_ = new float[num_line_];
 
-    // initial h_
+    // initial <h_>
     h_ = new Cursor[num_line_];
-    for (int i = 0; i < num_line_; ++i) {
-        // get predecessor in h[i]
-        trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
-    }
 
-    // initial l_
+    // initial <l_>
     l_ = new Cursor[num_line_];
-    for (int i = 0; i < num_line_; ++i) {
-        // get successor in h[i]
-        trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
-    }
 
     // reset all votes
     votes_ = new int[dim_line_];
-    memset(votes_, 0, sizeof(int) * dim_line_);
+
+    // initial <trees_>
+    char* index_path = new char[strlen(output_folder) + 20];
+    strcpy(index_path, output_folder);
+    strcat(index_path, "index/");
+
+    char* file_name = new char[20];
+
+    trees_ = new BTree*[num_line_];
+    for (int i = 0; i < num_line_; ++i) {
+        // generate the file name of the b-tree
+        GenTreeFileName(i, index_path, file_name);
+
+        trees_[i] = new BTree();
+        trees_[i]->InitFromFile(file_name);
+    }
+
+    delete[] index_path;
+    delete[] file_name;
 }
 
-void MEDRANK::Reset() {
-
+void MEDRANK::InitCursor() {
+    for (int i = 0; i < num_line_; ++i) {
+        trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
+        trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
+    }
+    memset(votes_, 0, sizeof(int) * dim_line_);
 }
 
 int MEDRANK::Vote(int candidate) {
@@ -101,4 +134,5 @@ int MEDRANK::GoGoGo() {
             }
         }
     }
+    return -1;
 }

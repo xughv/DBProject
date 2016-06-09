@@ -16,10 +16,8 @@ BTree::BTree() {
 
 // destructor                      
 BTree::~BTree() {
-    if (root_ptr_ != NULL) {
-        delete root_ptr_;
-        root_ptr_ = NULL;
-    }
+
+    DeleteRoot();
 
     if (file_ != NULL) {
         char* header = new char[file_->block_length()];
@@ -44,6 +42,12 @@ void BTree::Init(char* file_name, int block_length) {
     }
 
     file_ = new BlockFile(file_name, block_length);
+
+    // -------------------------------------------------------------------------
+    //  Init the first node: to store <blocklength> (page size of a node),
+    //  <number> (number of nodes including both index node and leaf node),
+    //  and <root> (address of root node)
+    // -------------------------------------------------------------------------
     root_ptr_ = new BNode();
     root_ptr_->Init(0, this);
 
@@ -62,11 +66,12 @@ void BTree::InitFromFile(char* file_name) {
     fclose(file);
 
     file_ = new BlockFile(file_name);
-    root_ptr_ = NULL;
+    DeleteRoot();
 
     char* header = new char[file_->block_length()];
     file_->ReadHeader(header);
     ReadRootFromBuffer(header);
+    LoadRoot();
 
     delete[] header;
 }
@@ -151,14 +156,11 @@ void BTree::BulkLoad(Pair* pairs, int num) {
     }
 
     // release the space
-    if (prev_node != NULL) {
-        delete prev_node;
-        prev_node = NULL;
-    }
-    if (cur_node != NULL) {
-        delete cur_node;
-        cur_node = NULL;
-    }
+    delete prev_node;
+    prev_node = NULL;
+
+    delete cur_node;
+    cur_node = NULL;
 
     // -------------------------------------------------------------------------
     //  Build the b-tree level by level
@@ -209,15 +211,12 @@ void BTree::BulkLoad(Pair* pairs, int num) {
         last_end_block   = end_block;
 
         // release the space
-        if (prev_node != NULL) {
-            delete prev_node;
-            prev_node = NULL;
-        }
-        if (cur_node != NULL) {
-            delete cur_node;
-            cur_node = NULL;
-        }
+        delete prev_node;
+        prev_node = NULL;
+        delete cur_node;
+        cur_node = NULL;
     }
+    root_block_ = last_start_block;
 }
 
 // -------------------------------------------------------------------------
@@ -238,16 +237,11 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor &cursor) {
         }
         // next level
         int block = cur_node->GetSon(pos);
-        if (tmp_node != NULL) {
-            delete tmp_node;
-        }
+
+        delete tmp_node;
         tmp_node = new BNode();
         tmp_node->InitFromFile(this, block);
         cur_node = tmp_node;
-    }
-    //  Release space
-    if (tmp_node != NULL) {
-        delete tmp_node;
     }
 
     // search in leaf node
@@ -256,6 +250,10 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor &cursor) {
     // get result
     cursor.SetValue(cur_node->block(), pos,
                     cur_node->GetSon(pos), cur_node->GetKey(pos), this);
+
+    //  Release space
+    delete tmp_node;
+
     return true;
 }
 
@@ -281,20 +279,16 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor &cursor) {
         }
         // next level
         int block = cur_node->GetSon(pos);
-        if (tmp_node != NULL) {
-            delete tmp_node;
-        }
+
+        delete tmp_node;
         tmp_node = new BNode();
         tmp_node->InitFromFile(this, block);
         cur_node = tmp_node;
     }
-    //  Release space
-    if (tmp_node != NULL) {
-        delete tmp_node;
-    }
 
     // search in leaf node
     int pos = cur_node->FindPositionByKey(key);
+
     // get the first key which greater than key
     if (pos + 1 < cur_node->num_entries()) {
         // in same node
@@ -307,6 +301,8 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor &cursor) {
             cursor.SetInvalid();
             return false;
         }
+        //  Release space
+        delete tmp_node;
         tmp_node = new BNode();
         tmp_node->InitFromFile(this, block);
         cur_node = tmp_node;
@@ -317,8 +313,7 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor &cursor) {
                     cur_node->GetSon(pos), cur_node->GetKey(pos), this);
 
     //  Release space
-    if (tmp_node != NULL) {
-        delete tmp_node;
-    }
+    delete tmp_node;
+
     return true;
 }

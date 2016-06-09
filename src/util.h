@@ -69,6 +69,7 @@ public:
                 this->SetInvalid();
                 return *this;
             }
+            delete cur_node;
             BNode* tmp_node = new BNode();
             tmp_node->InitFromFile(tree_, block);
             cur_node = tmp_node;
@@ -79,6 +80,9 @@ public:
         // get result
         this->SetValue(cur_node->block(), pos,
                         cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
+
+        //  Release space
+        delete cur_node;
 
         return *this;
     }
@@ -102,6 +106,7 @@ public:
                 this->SetInvalid();
                 return *this;
             }
+            delete cur_node;
             BNode* tmp_node = new BNode();
             tmp_node->InitFromFile(tree_, block);
             cur_node = tmp_node;
@@ -112,6 +117,9 @@ public:
         // get result
         this->SetValue(cur_node->block(), pos,
                        cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
+
+        //  Release space
+        delete cur_node;
 
         return *this;
     }

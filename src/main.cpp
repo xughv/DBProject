@@ -4,16 +4,19 @@
 
 int main() {
     int page_size = PAGE_SIZE_DEFAULT;
-    int num = 60000;
+    int num_data = 60000;
+    int num_query = 100;
     int dim = 784;
     int num_line = 50;
-    char *file_name = new char[20];
+    char *data_set = new char[20];
+    char *query_set = new char[20];
     char *dir = new char[20];
 
-    strcpy(file_name, "data/Mnist.ds");
+    strcpy(data_set, "data/Mnist.ds");
+    strcpy(query_set, "data/Mnist.q");
     strcpy(dir, "results/");
 
-    Indexing(num, dim, num_line, page_size, file_name, dir);
-
+    Indexing(num_data, dim, num_line, page_size, data_set, dir);
+    CalcANN(num_query, dim, query_set, dir);
     return 0;
 }

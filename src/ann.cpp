@@ -43,7 +43,6 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
             // sort
             qsort(pairs, num, sizeof(Pair), Compare);
 
-
             // generate the file name of the b-tree
             GenTreeFileName(i, index_path, file_name);
 
@@ -51,6 +50,7 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
             BTree* btree = new BTree();
             btree->Init(file_name, page_size);
             btree->BulkLoad(pairs, num);
+            delete btree;
         }
 
         delete[] index_path;
@@ -61,24 +61,25 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
     for (int i = 0; i < num; i++) {
         delete[] data[i];
     }
-    delete [] data;
+    delete[] data;
 }
 
 void CalcANN(int num, int dim, char* query_set, char* output_folder) {
 
     unsigned **query_data = new unsigned *[num];
     int* result = new int[num];
+    memset(result, 0, sizeof(int) * num);
     for (int i = 0; i < num; i++) {
         query_data[i] = new unsigned[dim];
-        memset(query_data[i], 0, sizeof(query_data[i]) * dim);
+        memset(query_data[i], 0, sizeof(unsigned) * dim);
     }
 
     if (!ReadSetFromFile(query_set, num, dim, query_data)) {
         // TODO: Error
     } else {
-
+//        printf("Open file\n");
         MEDRANK* medrank = MEDRANK::GetInstance();
-        medrank->Init();
+        medrank->Init(output_folder);
 
         // 初始化查询条件的投影
         for (int i = 0; i < num; ++i) {
@@ -86,8 +87,10 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
             for (int j = 0; j < medrank->num_line(); ++j) {
                 medrank->set_q(j, CalcProjection(dim, query_data[i], medrank->GetLine(j)));
             }
+            medrank->InitCursor();
             result[i] = medrank->GoGoGo();
         }
+//        printf("Calc Res\n");
 
         // 输出到文件
         char* file_name = new char[20];
@@ -108,6 +111,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
 
         fclose(fp);
 
+        delete[] file_name;
         delete[] result;
     }
 
@@ -115,7 +119,9 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
     for (int i = 0; i < num; i++) {
         delete[] query_data[i];
     }
-    delete [] query_data;
+    delete[] query_data;
+
+
 }
 
 void LinearScan(int num, int dim, char* query_set, char* data_set) {

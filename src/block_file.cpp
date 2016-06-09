@@ -202,7 +202,7 @@ void BlockFile::SetHeader(char* header) {
 //  currently <act_block> = <index> + 1 = 2 + 1 = 3.
 // -----------------------------------------------------------------------------
 // read a <block> from <index>
-bool BlockFile::ReadBlock(Block block,  int index) {
+bool BlockFile::ReadBlock(Block block, int index) {
     index++; // extrnl block to intrnl block
 
     // move to the position

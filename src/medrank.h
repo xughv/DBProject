@@ -15,9 +15,9 @@ public:
     // destructor
     ~MEDRANK();
     // -------------------------------------------------------------------------
-    void Init();
+    void Init(char *output_folder);
 
-    void Reset();
+    void InitCursor();
 
     int GoGoGo();
 
