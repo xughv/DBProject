@@ -42,6 +42,12 @@ MEDRANK::~MEDRANK() {
     votes_ = NULL;
 }
 
+void MEDRANK::InitVote(int num) {
+    // initial votes
+    num_data_ = num;
+    votes_ = new int[num];
+};
+
 void MEDRANK::GenLines(int dim_line, int num_line) {
     num_line_ = num_line;
     dim_line_ = dim_line;
@@ -65,9 +71,6 @@ void MEDRANK::Init(char *output_folder) {
 
     // initial <l_>
     l_ = new Cursor*[num_line_];
-
-    // reset all votes
-    votes_ = new int[dim_line_];
 
     // initial <trees_>
     char* index_path = new char[strlen(output_folder) + 20];
@@ -94,7 +97,7 @@ void MEDRANK::Init(char *output_folder) {
 
 void MEDRANK::InitCursor() {
 
-    memset(votes_, 0, sizeof(int) * dim_line_);
+    memset(votes_, 0, sizeof(int) * num_data_);
 
     for (int i = 0; i < num_line_; ++i) {
         trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);

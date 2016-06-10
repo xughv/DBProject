@@ -100,15 +100,16 @@ BlockFile::BlockFile(char* file_name, int block_length) {
 // -----------------------------------------------------------------------------
 // destructor
 BlockFile::~BlockFile() {
-    // release space of <file_name_>
-    if (file_name_) {               
-        delete[] file_name_;
-        file_name_ = NULL;
-    }
+    // close <fp_>
     if (fp_) {
         fclose(fp_);
         fp_ = NULL;
-    } // close <fp_>
+    }
+    // release space of <file_name_>
+    if (file_name_) {
+        delete[] file_name_;
+        file_name_ = NULL;
+    }
 }
 
 // -----------------------------------------------------------------------------

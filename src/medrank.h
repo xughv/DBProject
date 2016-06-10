@@ -19,6 +19,8 @@ public:
 
     void InitCursor();
 
+    void InitVote(int num);
+
     int GoGoGo();
 
     void GenLines(int dim, int num_line);
@@ -44,9 +46,11 @@ private:
 
     int num_line_;
     int dim_line_;
+
     float** lines_;
 
     int* votes_;
+    int num_data_;
 };
 
 #endif // _MEDRANK_H_

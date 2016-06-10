@@ -37,10 +37,6 @@ public:
         pair.SetValue(id, projection);
         tree_ = tree;
         invalid_ = false;
-
-        if (index_ < 0 || id > 60000) {
-            int a = 1;
-        }
     }
 
     void SetInvalid() {
