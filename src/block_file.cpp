@@ -62,6 +62,7 @@ BlockFile::BlockFile(char* file_name, int block_length) {
         fp_ = fopen(file_name_, "wb+");
         if (fp_ == NULL) {
             printf("BlockFile::BlockFile could not create file.\n");
+            return;
         }
 
         // ---------------------------------------------------------------------
@@ -104,7 +105,7 @@ BlockFile::~BlockFile() {
         delete[] file_name_;
         file_name_ = NULL;
     }
-    if (fp_ != NULL) {
+    if (fp_) {
         fclose(fp_);
         fp_ = NULL;
     } // close <fp_>

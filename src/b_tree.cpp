@@ -106,7 +106,7 @@ BlockFile* BTree::file() const {
 // -------------------------------------------------------------------------
 // bulkload b-tree from hash table in mem
 // <num> -- number of entries
-void BTree::BulkLoad(Pair** pairs, int num) {
+void BTree::BulkLoad(Pair* pairs, int num) {
 
     int start_block = -1;
     int end_block   = -1;
@@ -121,8 +121,8 @@ void BTree::BulkLoad(Pair** pairs, int num) {
     // ---------------------------------------------------------------------
     for (int i = 0; i < num; ++i) {
 
-        int id = pairs[i]->id();
-        float key = pairs[i]->projection();
+        int id = pairs[i].id();
+        float key = pairs[i].projection();
 
         if (cur_node == NULL) {
             cur_node = new BNode();
