@@ -31,6 +31,9 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         // 生成随机线段，参数（线的维数，线的数量）
         medrank->GenLines(dim, num_line);
 
+        // 初始化候选人
+        medrank->InitVote(num);
+
         // 生成num对<id, projection>
         Pair* pairs = new Pair[num];
 

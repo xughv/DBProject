@@ -3,8 +3,6 @@
 
 MEDRANK::MEDRANK() {
 
-    num_line_ = -1;
-
     h_ = l_ = NULL;
     q_ = NULL;
 
@@ -56,6 +54,11 @@ float* MEDRANK::GetLine(int index) {
     return lines_[index];
 }
 
+void MEDRANK::InitVote(int num) {
+    votes_ = new int[num];
+    memset(votes_, 0, sizeof(int)*num);
+}
+
 void MEDRANK::Init(char *output_folder) {
 
     q_ = new float[num_line_];
@@ -65,9 +68,6 @@ void MEDRANK::Init(char *output_folder) {
 
     // initial <l_>
     l_ = new Cursor*[num_line_];
-
-    // reset all votes
-    votes_ = new int[dim_line_];
 
     // initial <trees_>
     char* index_path = new char[strlen(output_folder) + 20];
@@ -94,7 +94,7 @@ void MEDRANK::Init(char *output_folder) {
 
 void MEDRANK::InitCursor() {
 
-    memset(votes_, 0, sizeof(int) * dim_line_);
+    memset(votes_, 0, sizeof(int) * num_data_);
 
     for (int i = 0; i < num_line_; ++i) {
         trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
@@ -127,6 +127,8 @@ int MEDRANK::GoGoGo() {
         float l_dis = FLT_MAX;
         if (!h_[i]->invalid()) h_dis = q_[i] - h_[i]->projection();
         if (!l_[i]->invalid()) l_dis = l_[i]->projection() - q_[i];
+
+        if (h_dis == FLT_MAX && l_dis == FLT_MAX) printf("两边同时到头");
 
         if (h_dis <= l_dis) {
             int result = Vote(h_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1

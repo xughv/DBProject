@@ -298,7 +298,7 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
         cur_node = new BNode();
         cur_node->InitFromFile(this, block);
 
-        pos = cur_node->FindPositionByKey(key);
+        pos = 0;
     }
 
     // get result

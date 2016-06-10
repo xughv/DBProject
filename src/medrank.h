@@ -19,6 +19,8 @@ public:
 
     void InitCursor();
 
+    void InitVote(int num);
+
     int GoGoGo();
 
     void GenLines(int dim, int num_line);
