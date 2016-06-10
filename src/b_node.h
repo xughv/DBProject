@@ -47,7 +47,7 @@ public:
     float GetKey(int index);
 
     // get <son_> indexed by <index>
-    float GetSon(int index);
+    int GetSon(int index);
     // -------------------------------------------------------------------------
     // get header size in b-node
     int GetHeaderSize();

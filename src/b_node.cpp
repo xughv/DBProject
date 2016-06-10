@@ -177,7 +177,7 @@ float BNode::GetKey(int index) {
 }
 
 // get <son_> indexed by <index>
-float BNode::GetSon(int index) {
+int BNode::GetSon(int index) {
     if (index < 0 || index >= num_entries_) {
         // TODO: Error
     }

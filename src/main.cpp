@@ -11,7 +11,7 @@ int main() {
     char *dir = new char[20];
 
     strcpy(file_name, "data/Mnist.ds");
-    strcpy(dir, "results/");
+    strcpy(dir, "result/");
 
     Indexing(num, dim, num_line, page_size, file_name, dir);
 
