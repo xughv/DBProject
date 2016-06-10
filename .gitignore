@@ -14,3 +14,4 @@ CMakeLists.txt
 medrank
 
 *.o
+DBProject.exe
