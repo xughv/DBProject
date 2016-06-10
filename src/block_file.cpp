@@ -212,8 +212,9 @@ bool BlockFile::ReadBlock(Block block, int index) {
         SeekBlock(index);
     } else {
         printf("BlockFile::ReadBlock request the block %d "
-            "which is illegal.", index - 1);
+            "which is illegal.\n", index - 1);
         // error("\n", true);
+        return false;
     }
 
     GetBytes(block, block_length_); // read the block

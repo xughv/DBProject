@@ -74,9 +74,8 @@ public:
                 return *this;
             }
             delete cur_node;
-            BNode* tmp_node = new BNode();
-            tmp_node->InitFromFile(tree_, block);
-            cur_node = tmp_node;
+            cur_node = new BNode();
+            cur_node->InitFromFile(tree_, block);
             // pos at first in right_sibling
             pos = 0;
         }
@@ -112,9 +111,9 @@ public:
                 return *this;
             }
             delete cur_node;
-            BNode* tmp_node = new BNode();
-            tmp_node->InitFromFile(tree_, block);
-            cur_node = tmp_node;
+            cur_node = new BNode();
+            cur_node->InitFromFile(tree_, block);
+
             // pos at last in left_sibling
             pos = cur_node->num_entries() - 1;
         }

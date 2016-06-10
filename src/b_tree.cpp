@@ -17,8 +17,6 @@ BTree::BTree() {
 // destructor                      
 BTree::~BTree() {
 
-    DeleteRoot();
-
     if (file_ != NULL) {
         char* header = new char[file_->block_length()];
         WriteRootToBuffer(header);
@@ -29,6 +27,8 @@ BTree::~BTree() {
         delete file_;
         file_ = NULL;
     }
+
+    DeleteRoot();
 }
 
 // -------------------------------------------------------------------------
@@ -56,16 +56,15 @@ void BTree::InitFromFile(char* file_name) {
     FILE* file = fopen(file_name, "r");
     if (file == NULL) {
         printf("Error log\n");
+        return;
     }
     fclose(file);
 
     file_ = new BlockFile(file_name);
-    DeleteRoot();
 
     char* header = new char[file_->block_length()];
     file_->ReadHeader(header);
     ReadRootFromBuffer(header);
-    LoadRoot();
 
     delete[] header;
 }
@@ -107,7 +106,7 @@ BlockFile* BTree::file() const {
 // -------------------------------------------------------------------------
 // bulkload b-tree from hash table in mem
 // <num> -- number of entries
-void BTree::BulkLoad(Pair* pairs, int num) {
+void BTree::BulkLoad(Pair** pairs, int num) {
 
     int start_block = -1;
     int end_block   = -1;
@@ -122,8 +121,8 @@ void BTree::BulkLoad(Pair* pairs, int num) {
     // ---------------------------------------------------------------------
     for (int i = 0; i < num; ++i) {
 
-        int id = pairs[i].id();
-        float key = pairs[i].projection();
+        int id = pairs[i]->id();
+        float key = pairs[i]->projection();
 
         if (cur_node == NULL) {
             cur_node = new BNode();
@@ -217,8 +216,8 @@ void BTree::BulkLoad(Pair* pairs, int num) {
 // get cursor not greater than key
 // cursor (return)
 bool BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
+    LoadRoot();
     BNode* cur_node = root_ptr_;
-    BNode* tmp_node = NULL;
 
     // search in index nodes
     while (cur_node->level() > 0) {
@@ -232,11 +231,10 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
         // next level
         int block = cur_node->GetSon(pos);
 
-        delete tmp_node;
+        delete cur_node;
 
-        tmp_node = new BNode();
-        tmp_node->InitFromFile(this, block);
-        cur_node = tmp_node;
+        cur_node = new BNode();
+        cur_node->InitFromFile(this, block);
     }
 
     // search in leaf node
@@ -247,16 +245,16 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
                     cur_node->GetSon(pos), cur_node->GetKey(pos), this);
 
     //  Release space
-    delete tmp_node;
-
+    delete cur_node;
+    root_ptr_ = NULL;
     return true;
 }
 
 // get cursor greater than key
 // cursor (return)
 bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
+    LoadRoot();
     BNode* cur_node = root_ptr_;
-    BNode* tmp_node = NULL;
 
     // search in index nodes
     while (cur_node->level() > 0) {
@@ -275,10 +273,9 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
         // next level
         int block = cur_node->GetSon(pos);
 
-        delete tmp_node;
-        tmp_node = new BNode();
-        tmp_node->InitFromFile(this, block);
-        cur_node = tmp_node;
+        delete cur_node;
+        cur_node = new BNode();
+        cur_node->InitFromFile(this, block);
     }
 
     // search in leaf node
@@ -297,10 +294,11 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
             return false;
         }
         //  Release space
-        delete tmp_node;
-        tmp_node = new BNode();
-        tmp_node->InitFromFile(this, block);
-        cur_node = tmp_node;
+        delete cur_node;
+        cur_node = new BNode();
+        cur_node->InitFromFile(this, block);
+
+        pos = cur_node->FindPositionByKey(key);
     }
 
     // get result
@@ -308,7 +306,7 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
                     cur_node->GetSon(pos), cur_node->GetKey(pos), this);
 
     //  Release space
-    delete tmp_node;
-
+    delete cur_node;
+    root_ptr_ = NULL;
     return true;
 }
