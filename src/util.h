@@ -37,6 +37,10 @@ public:
         pair.SetValue(id, projection);
         tree_ = tree;
         invalid_ = false;
+
+        if (index_ < 0 || id > 60000) {
+            int a = 1;
+        }
     }
 
     void SetInvalid() {
@@ -72,6 +76,12 @@ public:
             delete cur_node;
             cur_node = new BNode();
             cur_node->InitFromFile(tree_, block);
+
+            if (cur_node->num_entries() < 1) {
+                delete cur_node;
+                this->SetInvalid();
+                return *this;
+            }
             // pos at first in right_sibling
             pos = 0;
         }
@@ -110,6 +120,11 @@ public:
             cur_node = new BNode();
             cur_node->InitFromFile(tree_, block);
 
+            if (cur_node->num_entries() < 1) {
+                delete cur_node;
+                this->SetInvalid();
+                return *this;
+            }
             // pos at last in left_sibling
             pos = cur_node->num_entries() - 1;
         }
