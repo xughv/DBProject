@@ -12,14 +12,9 @@ int main() {
     char *query_set = new char[20];
     char *dir = new char[20];
 
-<<<<<<< HEAD
-    strcpy(file_name, "data/Mnist.ds");
-    strcpy(dir, "result/");
-=======
     strcpy(data_set, "data/Mnist.ds");
     strcpy(query_set, "data/Mnist.q");
-    strcpy(dir, "results/");
->>>>>>> refs/remotes/origin/master
+    strcpy(dir, "result/");
 
     Indexing(num_data, dim, num_line, page_size, data_set, dir);
     CalcANN(num_query, dim, query_set, dir);

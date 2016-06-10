@@ -59,7 +59,7 @@ public:
         int pos = index_;
         BNode* cur_node = new BNode();
 
-        cur_node->InitFromFile(tree_, index_);
+        cur_node->InitFromFile(tree_, node_block_);
 
         // get the first key which greater than key
         if (pos + 1 < cur_node->num_entries()) {
@@ -96,7 +96,7 @@ public:
         int pos = index_;
         BNode* cur_node = new BNode();
 
-        cur_node->InitFromFile(tree_, index_);
+        cur_node->InitFromFile(tree_, node_block_);
 
         // get the first key which less than key
         if (pos > 0) {
