@@ -131,7 +131,6 @@ float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim) {
 }
 
 int Compare(const void *a , const void *b) {
-    float res = (*(Pair **)a)->projection() - (*(Pair **)b)->projection();
-    if (res > 0) return 1;
-    return -1;
+//    return (*(Pair **)a)->projection() > (*(Pair **)b)->projection() ? 1 : -1;
+    return ((Pair *)a)->projection() > ((Pair *)b)->projection() ? 1 : -1;
 }

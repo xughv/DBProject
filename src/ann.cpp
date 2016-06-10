@@ -32,15 +32,15 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         medrank->GenLines(dim, num_line);
 
         // 生成num对<id, projection>
-        Pair** pairs = new Pair*[num];
+        Pair* pairs = new Pair[num];
 
         char* file_name = new char[20];
 
         for (int i = 0; i < num_line; ++i) {
 
             for (int j = 0; j < num; ++j) {
-                pairs[j] = new Pair();
-                pairs[j]->SetValue(j, CalcProjection(dim, data[j], medrank->GetLine(i)));
+//                pairs[j] = new Pair();
+                pairs[j].SetValue(j, CalcProjection(dim, data[j], medrank->GetLine(i)));
             }
             // sort
             qsort(pairs, num, sizeof(Pair), Compare);
@@ -57,9 +57,9 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
 
         delete[] index_path;
         delete[] file_name;
-        for (int i = 0; i < num; i++) {
-            delete[] pairs[i];
-        }
+//        for (int i = 0; i < num; i++) {
+//            delete[] pairs[i];
+//        }
         delete[] pairs;
     }
 
