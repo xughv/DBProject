@@ -34,12 +34,6 @@ BTree::~BTree() {
 // -------------------------------------------------------------------------
 // init a new b-tree
 void BTree::Init(char* file_name, int block_length) {
-    // check whether the file exists
-    FILE* file = fopen(file_name, "rb+");
-    if (file != NULL) {
-        fclose(file);
-        // TODO: file is exist
-    }
 
     file_ = new BlockFile(file_name, block_length);
 
@@ -61,7 +55,7 @@ void BTree::InitFromFile(char* file_name) {
     // check whether the file exists
     FILE* file = fopen(file_name, "r");
     if (file == NULL) {
-        // TODO: file is not exist
+        printf("Error log\n");
     }
     fclose(file);
 

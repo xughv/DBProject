@@ -111,11 +111,12 @@ bool CreateDirectory(const char* path) {
 }
 
 void GenTreeFileName(int tree_id, char* path, char* file_name) {
-    char tmp[20];
+    char* tmp = new char[20];
     strcpy(file_name, path);
     sprintf(tmp, "%d", tree_id);
     strcat(file_name, tmp);
     strcat(file_name, ".index");
+    delete[] tmp;
 }
 
 float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim) {

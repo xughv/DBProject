@@ -17,7 +17,7 @@ MEDRANK::MEDRANK() {
 }
 
 MEDRANK::~MEDRANK() {
-    delete q_;
+    delete[] q_;
     q_ = NULL;
 
     for (int i = 0; i < num_line_; i++) {
@@ -28,16 +28,17 @@ MEDRANK::~MEDRANK() {
     }
     delete[] lines_;
     lines_ = NULL;
+
     delete[] trees_;
     trees_ = NULL;
 
-    delete h_;
+    delete[] h_;
     h_ = NULL;
 
-    delete l_;
+    delete[] l_;
     l_ = NULL;
 
-    delete votes_;
+    delete[] votes_;
     votes_ = NULL;
 }
 
@@ -92,11 +93,14 @@ void MEDRANK::Init(char *output_folder) {
 }
 
 void MEDRANK::InitCursor() {
+
+    memset(votes_, 0, sizeof(int) * dim_line_);
+
     for (int i = 0; i < num_line_; ++i) {
         trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
         trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
     }
-    memset(votes_, 0, sizeof(int) * dim_line_);
+
 }
 
 int MEDRANK::Vote(int candidate) {
