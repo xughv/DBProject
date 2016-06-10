@@ -58,6 +58,8 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
             delete btree;
         }
 
+        medrank->InitVote(num);
+
         delete[] index_path;
         delete[] file_name;
 //        for (int i = 0; i < num; i++) {

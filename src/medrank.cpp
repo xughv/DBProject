@@ -40,6 +40,12 @@ MEDRANK::~MEDRANK() {
     votes_ = NULL;
 }
 
+void MEDRANK::InitVote(int num) {
+    // initial votes
+    num_data_ = num;
+    votes_ = new int[num];
+};
+
 void MEDRANK::GenLines(int dim_line, int num_line) {
     num_line_ = num_line;
     dim_line_ = dim_line;
