@@ -131,60 +131,55 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
 
 }
 
-void LinearScan(int num, int dim, char* query_set, char* data_set) {
+void LinearScan(int num_data, int num_query, int dim, char* query_set, char* data_set) {
 
     // 读取查询数据
-    int num_q_data = 100;
-    unsigned **q_data = new unsigned *[num_q_data];
-    for (int i = 0; i < num_q_data; i++) {
+    unsigned **q_data = new unsigned *[num_query];
+    for (int i = 0; i < num_query; i++) {
         q_data[i] = new unsigned[dim];
         memset(q_data[i], 0, sizeof(q_data[i]) * dim);
     }
 
     // 读取数据
-    unsigned** db_data = new unsigned*[num];
-    for (int i = 0; i < num; i++) {
+    unsigned** db_data = new unsigned*[num_data];
+    for (int i = 0; i < num_data; i++) {
         db_data[i] = new unsigned[dim];
         memset(db_data[i], 0, sizeof(unsigned) * dim);
     }
 
-    if (!ReadSetFromFile(query_set, num_q_data, dim, q_data)) {
+    if (!ReadSetFromFile(query_set, num_query, dim, q_data)) {
         // TODO: Error
-    } else if (!ReadSetFromFile(data_set, num, dim, db_data)) {
+    } else if (!ReadSetFromFile(data_set, num_data, dim, db_data)) {
         // TODO: Error
     } else {
         float min_dis = FLT_MAX;
-        int *min_point_index = new int[num_q_data];
-        memset(min_point_index, 0, sizeof(min_point_index) * num_q_data);
+        int *min_point_index = new int[num_query];
+        memset(min_point_index, 0, sizeof(int) * num_query);
 
-        for (int i = 0; i < num_q_data; ++i) {
+        Pair *pairs = new Pair[num_data];
+        for (int i = 0; i < num_query; ++i) {
             min_dis = FLT_MAX;
-            for (int j = 0; j < num; ++j) {
-                float dis = CalcPointsDistance(q_data[i], db_data[j], dim);
-                if (min_dis > dis) {
-                    min_dis = dis;
-                    min_point_index[i] = j;
-                }
+            for (int j = 0; j < num_data; ++j) {
+                pairs[j].SetValue(j, CalcPointsDistance(q_data[i], db_data[j], dim));
             }
+            qsort(pairs, num_data, sizeof(Pair), Compare);
+            for (int j = 0; j < 20; ++j) printf("%d ", pairs[j].id());
+            printf("\n");
         }
 
-        for (int i = 0; i < 100; ++i) {
-            printf("num: %d , id: %d\n", i, min_point_index[i]);
-        }
-
-        // 清除min_point_index指针
+        delete[] pairs;
         delete[] min_point_index;
 
     }
 
     // 清除查询数据二维指针
-    for (int i = 0; i < num_q_data; i++) {
+    for (int i = 0; i < num_query; i++) {
         delete[] q_data[i];
     }
     delete[] q_data;
 
     // 清除数据二维指针
-    for (int i = 0; i < num; i++) {
+    for (int i = 0; i < num_data; i++) {
         delete[] db_data[i];
     }
     delete[] db_data;
