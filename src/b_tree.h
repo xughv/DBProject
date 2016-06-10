@@ -29,7 +29,7 @@ public:
     // -------------------------------------------------------------------------
     // bulkload b-tree from hash table in mem
     // <num> -- number of entries
-    void BulkLoad(Pair* pairs, int num);
+    void BulkLoad(Pair** pairs, int num);
 
     // -------------------------------------------------------------------------
     // get cursor not greater than key

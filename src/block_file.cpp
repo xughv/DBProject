@@ -80,12 +80,11 @@ BlockFile::BlockFile(char* file_name, int block_length) {
         //  ftell() return number of bytes from current position to the 
         //  beginning position of the file.
         // ---------------------------------------------------------------------
-        char* buffer = NULL;
         int len = block_length_ - (int) ftell(fp_); // cmpt remain length of a block
-        buffer = new char[len];
+        char* buffer = new char[len];
 
         // set to 0 to remain bytes
-        memset(buffer, 0, sizeof(buffer));
+        memset(buffer, 0, sizeof(char)*len);
         PutBytes(buffer, len);
 
         delete[] buffer;
@@ -159,7 +158,7 @@ void BlockFile::ReadHeader(char* buffer) {
 // contain remain bytes
 void BlockFile::SetHeader(char* header) {
     // jump out of first 8 bytes
-    if (fp_) fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
+    fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
 
     // write remain bytes into <buffer>
     PutBytes(header, block_length_ - BFHEAD_LENGTH);
@@ -213,8 +212,9 @@ bool BlockFile::ReadBlock(Block block, int index) {
         SeekBlock(index);
     } else {
         printf("BlockFile::ReadBlock request the block %d "
-            "which is illegal.", index - 1);
+            "which is illegal.\n", index - 1);
         // error("\n", true);
+        return false;
     }
 
     GetBytes(block, block_length_); // read the block

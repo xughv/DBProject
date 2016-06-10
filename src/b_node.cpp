@@ -85,7 +85,7 @@ void BNode::InitFromFile(BTree* btree, int block) {
 
     char* buf = new char[block_length];
 
-    if (btree_->file() != NULL) btree_->file()->ReadBlock(buf, block);
+    btree_->file()->ReadBlock(buf, block);
     ReadFromBuffer(buf);
 
     delete[] buf;
