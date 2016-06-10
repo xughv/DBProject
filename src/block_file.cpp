@@ -52,7 +52,7 @@ BlockFile::BlockFile(char* file_name, int block_length) {
             //  Ensure <block_length_> is larger than or equal to 8 bytes.
             //  8 bytes = 4 bypes <block_length_> + 4 bytes <num_blocks_>.
             // -----------------------------------------------------------------
-            // error("BlockFile::BlockFile couldnot open file.\n", true);
+            printf("BlockFile::BlockFile could not open file.\n");
         }
 
         // ---------------------------------------------------------------------
@@ -61,7 +61,7 @@ BlockFile::BlockFile(char* file_name, int block_length) {
         // ---------------------------------------------------------------------
         fp_ = fopen(file_name_, "wb+");
         if (fp_ == NULL) {
-            // error("BlockFile::BlockFile could not create file.\n", true);
+            printf("BlockFile::BlockFile could not create file.\n");
         }
 
         // ---------------------------------------------------------------------
@@ -159,7 +159,7 @@ void BlockFile::ReadHeader(char* buffer) {
 // contain remain bytes
 void BlockFile::SetHeader(char* header) {
     // jump out of first 8 bytes
-    fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
+    if (fp_) fseek(fp_, BFHEAD_LENGTH, SEEK_SET);
 
     // write remain bytes into <buffer>
     PutBytes(header, block_length_ - BFHEAD_LENGTH);

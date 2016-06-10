@@ -51,6 +51,7 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
             btree->Init(file_name, page_size);
             btree->BulkLoad(pairs, num);
             delete btree;
+            btree = NULL;
         }
 
         delete[] index_path;

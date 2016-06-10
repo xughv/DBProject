@@ -32,6 +32,9 @@ private:
 
 class Cursor {
 public:
+    Cursor() {
+        invalid_ = true;
+    }
     void SetValue(int node_block, int index, int id, float projection, BTree* tree) {
         node_block_ = node_block;
         index_ = index;
@@ -52,6 +55,7 @@ public:
 
     // 前缀自加重载
     Cursor& operator ++() {
+        if (invalid()) return *this;
         int pos = index_;
         BNode* cur_node = new BNode();
 
@@ -89,6 +93,7 @@ public:
 
     // 前缀自减重载
     Cursor& operator --() {
+        if (invalid()) return *this;
         int pos = index_;
         BNode* cur_node = new BNode();
 

@@ -18,5 +18,9 @@ int main() {
 
     Indexing(num_data, dim, num_line, page_size, data_set, dir);
     CalcANN(num_query, dim, query_set, dir);
+
+    delete[] data_set;
+    delete[] query_set;
+    delete[] dir;
     return 0;
 }

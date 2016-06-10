@@ -60,7 +60,7 @@ void BNode::Init(int level, BTree* btree) {
 
     char* buf = new char[block_length];
     block_ = btree_->file()->AppendBlock(buf);
-    delete buf;
+    delete[] buf;
 }
 
 // load an exist node from disk to init
@@ -84,7 +84,8 @@ void BNode::InitFromFile(BTree* btree, int block) {
     memset(son_, -1, sizeof(int) * capacity_);
 
     char* buf = new char[block_length];
-    btree_->file()->ReadBlock(buf, block);
+
+    if (btree_->file() != NULL) btree_->file()->ReadBlock(buf, block);
     ReadFromBuffer(buf);
 
     delete[] buf;

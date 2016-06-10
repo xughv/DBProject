@@ -13,6 +13,7 @@ MEDRANK::MEDRANK() {
     num_line_ = -1;
     dim_line_ = -1;
     lines_ = NULL;
+    votes_ = NULL;
 }
 
 MEDRANK::~MEDRANK() {
@@ -27,7 +28,6 @@ MEDRANK::~MEDRANK() {
     }
     delete[] lines_;
     lines_ = NULL;
-
     delete[] trees_;
     trees_ = NULL;
 
@@ -36,6 +36,9 @@ MEDRANK::~MEDRANK() {
 
     delete l_;
     l_ = NULL;
+
+    delete votes_;
+    votes_ = NULL;
 }
 
 void MEDRANK::GenLines(int dim_line, int num_line) {
