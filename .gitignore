@@ -14,4 +14,9 @@ CMakeLists.txt
 medrank
 
 *.o
+<<<<<<< HEAD
 DBProject.exe
+=======
+
+*.out
+>>>>>>> refs/remotes/origin/master

@@ -39,7 +39,7 @@ public:
 
     // move <fp_> to the right with <bnum>
     void SeekBlock(int bnum)
-    { fseek(fp_, (bnum - act_block_) * block_length_, SEEK_CUR); }
+    { if (fp_) fseek(fp_, (bnum - act_block_) * block_length_, SEEK_CUR); }
 
     // -------------------------------------------------------------------------
     // write a value <num> (type int)

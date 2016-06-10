@@ -15,9 +15,9 @@ public:
     // destructor
     ~MEDRANK();
     // -------------------------------------------------------------------------
-    void Init();
+    void Init(char *output_folder);
 
-    void Reset();
+    void InitCursor();
 
     int GoGoGo();
 
@@ -36,8 +36,8 @@ private:
     // constructor
     MEDRANK();
 
-    Cursor* h_;
-    Cursor* l_;
+    Cursor** h_;
+    Cursor** l_;
 
     float* q_;
     BTree** trees_;

@@ -29,14 +29,11 @@ BNode::~BNode() {
     }
 
     // release
-    if (key_) {
-        delete[] key_;
-        key_ = NULL;
-    }
-    if (son_) {
-        delete[] son_;
-        son_ = NULL;
-    }
+    delete[] key_;
+    key_ = NULL;
+
+    delete[] son_;
+    son_ = NULL;
 }
 
 // -------------------------------------------------------------------------
@@ -63,7 +60,7 @@ void BNode::Init(int level, BTree* btree) {
 
     char* buf = new char[block_length];
     block_ = btree_->file()->AppendBlock(buf);
-    delete buf;
+    delete[] buf;
 }
 
 // load an exist node from disk to init
@@ -72,6 +69,7 @@ void BNode::Init(int level, BTree* btree) {
 void BNode::InitFromFile(BTree* btree, int block) {
 
     btree_ = btree;
+    block_ = block;
 
     int block_length = btree_->file()->block_length();
     capacity_ = (block_length - GetHeaderSize()) / GetEntrySize();
@@ -86,8 +84,11 @@ void BNode::InitFromFile(BTree* btree, int block) {
     memset(son_, -1, sizeof(int) * capacity_);
 
     char* buf = new char[block_length];
-    block_ = btree_->file()->ReadBlock(buf, block);
-    delete buf;
+
+    if (btree_->file() != NULL) btree_->file()->ReadBlock(buf, block);
+    ReadFromBuffer(buf);
+
+    delete[] buf;
 }
 
 // -------------------------------------------------------------------------
@@ -108,12 +109,12 @@ void BNode::ReadFromBuffer(char* buf) {
     memcpy(&right_sibling_, &buf[pos], SIZE_INT);
     pos += SIZE_INT;
 
-    for (int j = 0; j < num_entries_; j++) {
+    for (int i = 0; i < num_entries_; i++) {
         // read <key_>
-        memcpy(&key_[j], &buf[pos], SIZE_FLOAT);
+        memcpy(&key_[i], &buf[pos], SIZE_FLOAT);
         pos += SIZE_FLOAT;
         // read <son_>
-        memcpy(&son_[j], &buf[pos], SIZE_INT);
+        memcpy(&son_[i], &buf[pos], SIZE_INT);
         pos += SIZE_INT;
     }
 }
@@ -135,12 +136,12 @@ void BNode::WriteToBuffer(char* buf) {
     memcpy(&buf[pos], &right_sibling_, SIZE_INT);
     pos += SIZE_INT;
 
-    for (int j = 0; j < num_entries_; j++) {
+    for (int i = 0; i < num_entries_; i++) {
         // write <key_>
-        memcpy(&buf[pos], &key_[j], SIZE_FLOAT);
+        memcpy(&buf[pos], &key_[i], SIZE_FLOAT);
         pos += SIZE_FLOAT;
         // write <son_>
-        memcpy(&buf[pos], &son_[j], SIZE_INT);
+        memcpy(&buf[pos], &son_[i], SIZE_INT);
         pos += SIZE_INT;
     }
 }
@@ -249,5 +250,5 @@ int BNode::num_entries() const {
 
 // get <level_>
 int BNode::level() const {
-    return level_;
+    return (int)level_;
 }

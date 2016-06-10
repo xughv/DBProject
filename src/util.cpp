@@ -39,7 +39,7 @@ void GenRandomVector(int dim, float* vec) {
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
 
     // open data file
-    FILE* fp = fopen(file_name, "rb");
+    FILE* fp = fopen(file_name, "rb+");
 
     if (!fp) {
         printf("I could not open %s.\n", file_name);
