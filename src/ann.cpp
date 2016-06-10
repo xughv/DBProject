@@ -95,7 +95,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder) {
             medrank->InitCursor();
             result[i] = medrank->GoGoGo();
         }
-//        printf("Calc Res\n");
+        printf("Write Res\n");
 
         // 输出到文件
         char* file_name = new char[strlen(output_folder) + 20];

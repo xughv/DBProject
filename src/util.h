@@ -20,10 +20,6 @@ public:
         projection_ = projection;
     }
 
-    int operator -(Pair &pair) const {
-        return this->projection() - pair.projection();
-    }
-
 private:
     int id_;                            // object id
     float projection_;                  // projection of the object
@@ -41,6 +37,10 @@ public:
         pair.SetValue(id, projection);
         tree_ = tree;
         invalid_ = false;
+
+        if (index_ < 0 || id > 60000) {
+            int a = 1;
+        }
     }
 
     void SetInvalid() {
@@ -59,7 +59,7 @@ public:
         int pos = index_;
         BNode* cur_node = new BNode();
 
-        cur_node->InitFromFile(tree_, index_);
+        cur_node->InitFromFile(tree_, node_block_);
 
         // get the first key which greater than key
         if (pos + 1 < cur_node->num_entries()) {
@@ -76,6 +76,12 @@ public:
             delete cur_node;
             cur_node = new BNode();
             cur_node->InitFromFile(tree_, block);
+
+            if (cur_node->num_entries() < 1) {
+                delete cur_node;
+                this->SetInvalid();
+                return *this;
+            }
             // pos at first in right_sibling
             pos = 0;
         }
@@ -96,7 +102,7 @@ public:
         int pos = index_;
         BNode* cur_node = new BNode();
 
-        cur_node->InitFromFile(tree_, index_);
+        cur_node->InitFromFile(tree_, node_block_);
 
         // get the first key which less than key
         if (pos > 0) {
@@ -114,6 +120,11 @@ public:
             cur_node = new BNode();
             cur_node->InitFromFile(tree_, block);
 
+            if (cur_node->num_entries() < 1) {
+                delete cur_node;
+                this->SetInvalid();
+                return *this;
+            }
             // pos at last in left_sibling
             pos = cur_node->num_entries() - 1;
         }
