@@ -25,16 +25,24 @@ private:
     float projection_;                  // projection of the object
 };
 
-
+// -----------------------------------------------------------------------------
+//  Cursor: a pointer on the object of B-tree
+// -----------------------------------------------------------------------------
 class Cursor {
 public:
     Cursor() {
         invalid_ = true;
+        node_ = NULL;
     }
-    void SetValue(int node_block, int index, int id, float projection, BTree* tree) {
-        node_block_ = node_block;
-        index_ = index;
-        pair.SetValue(id, projection);
+
+    ~Cursor() {
+        delete node_;
+        node_ = NULL;
+    }
+
+    void SetValue(BNode* node, int pos, BTree* tree) {
+        node_ = node;
+        pos_ = pos;
         tree_ = tree;
         invalid_ = false;
     }
@@ -43,40 +51,35 @@ public:
         invalid_ = true;
     }
 
-    int node_block() const { return node_block_; }
-    int index() const { return index_; }
-    int id() const { return pair.id(); }
-    float projection() const { return pair.projection(); }
-    bool invalid() const { return invalid_; }
+    void Release() {
+        delete node_;
+        node_ = NULL;
+    }
 
     int MoveRight() {
         int io_cost = 0;
-        if (invalid()) return io_cost;
-        int pos = index_;
-        BNode* cur_node = new BNode();
 
-        cur_node->InitFromFile(tree_, node_block_);
-        io_cost++;
+        if (invalid()) return io_cost;
+        int pos = pos_;
 
         // get the first key which greater than key
-        if (pos + 1 < cur_node->num_entries()) {
+        if (pos + 1 < node_->num_entries()) {
             // in same node
             pos++;
         } else {
             // in right_sibling node
-            int block = cur_node->right_sibling();
+            int block = node_->right_sibling();
             if (block < 0) {
                 // current node don't have right_sibling
                 this->SetInvalid();
                 return io_cost;
             }
-            delete cur_node;
-            cur_node = new BNode();
-            cur_node->InitFromFile(tree_, block);
+            delete node_;
+            node_ = new BNode();
+            node_->InitFromFile(tree_, block);
             io_cost++;
 
-            if (cur_node->num_entries() < 1) {
-                delete cur_node;
+            if (node_->num_entries() < 1) {
                 this->SetInvalid();
                 return io_cost;
             }
@@ -85,11 +88,7 @@ public:
         }
 
         // get result
-        this->SetValue(cur_node->block(), pos,
-                       cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
-
-        //  Release space
-        delete cur_node;
+        this->SetValue(node_, pos, tree_);
 
         return io_cost;
     }
@@ -98,11 +97,7 @@ public:
         int io_cost = 0;
 
         if (invalid()) return io_cost;
-        int pos = index_;
-        BNode* cur_node = new BNode();
-
-        cur_node->InitFromFile(tree_, node_block_);
-        io_cost++;
+        int pos = pos_;
 
         // get the first key which less than key
         if (pos > 0) {
@@ -110,39 +105,46 @@ public:
             pos--;
         } else {
             // in left_sibling node
-            int block = cur_node->left_sibling();
+            int block = node_->left_sibling();
             if (block < 0) {
                 // current node don't have left_sibling
                 this->SetInvalid();
                 return io_cost;
             }
-            delete cur_node;
-            cur_node = new BNode();
-            cur_node->InitFromFile(tree_, block);
+            delete node_;
+            node_ = new BNode();
+            node_->InitFromFile(tree_, block);
             io_cost++;
 
-            if (cur_node->num_entries() < 1) {
-                delete cur_node;
+            if (node_->num_entries() < 1) {
                 this->SetInvalid();
                 return io_cost;
             }
             // pos at last in left_sibling
-            pos = cur_node->num_entries() - 1;
+            pos = node_->num_entries() - 1;
         }
 
         // get result
-        this->SetValue(cur_node->block(), pos,
-                       cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
-
-        //  Release space
-        delete cur_node;
+        this->SetValue(node_, pos, tree_);
 
         return io_cost;
     }
+
+    int id() const {
+        if (node_) return node_->GetSon(pos_);
+        return -1;
+    }
+
+    float projection() const {
+        if (node_) return node_->GetKey(pos_);
+        return -1;
+    }
+
+    bool invalid() const { return invalid_; }
+
 private:
-    int node_block_;
-    int index_;
-    Pair pair;
+    BNode* node_;
+    int pos_;
 
     bool invalid_;
 

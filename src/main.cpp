@@ -20,12 +20,15 @@ int main(int argc, char* argv[]) {
     strcpy(query_set, "data/Mnist.q");
     strcpy(dir, OUTPUT_DIR_DEFAULT);
 
+    int* result_id = new int[num_query];
+
     Indexing(num_data, dim, num_line, page_size, data_set, dir);
-    CalcANN(num_query, dim, query_set, dir);
-    LinearScan(num_data, num_query, dim, query_set, data_set);
+    CalcANN(num_query, dim, query_set, dir, result_id);
+    LinearScan(num_data, num_query, dim, query_set, data_set, result_id);
 
     delete[] data_set;
     delete[] query_set;
     delete[] dir;
+    delete[] result_id;
     return 0;
 }

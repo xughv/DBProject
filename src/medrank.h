@@ -23,9 +23,9 @@ public:
 
     int Execute();
 
-    void GenLines(int dim, int num_line);
+    void GenRandomVectors(int dim, int num_line);
 
-    float* GetLine(int index);
+    float* GetRandomVector(int index);
 
     int VoteAndJudge(int candidate);
 
@@ -46,10 +46,9 @@ private:
     float* q_;
     BTree** trees_;
 
-    int num_line_;
-    int dim_line_;
+    int num_vector_;
 
-    float** lines_;
+    float** vectors_;
 
     int* votes_;
     int num_data_;

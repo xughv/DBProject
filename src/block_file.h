@@ -5,7 +5,8 @@
 #include "def.h"
 
 // -----------------------------------------------------------------------------
-//  NOTE: The author of the implementation of class BlockFile is Yufei Tao and Qiang Huang.
+//  NOTE: The author of the implementation of class BlockFile is
+//        Yufei Tao and Qiang Huang.
 //  Modified by Guanghui Xu
 // -----------------------------------------------------------------------------
 
@@ -50,11 +51,11 @@ public:
 
     // -------------------------------------------------------------------------
     // fetches info in the first block
-    // <header> -- excluding the header of blk file
+    // <header>: excluding the header of blk file
     void ReadHeader(char* header);       
 
     // writes the info in the first block
-    // <header> -- excluding the header of blk file
+    // <header>: excluding the header of blk file
     void SetHeader(char* header);
 
     // -------------------------------------------------------------------------

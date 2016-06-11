@@ -2,16 +2,16 @@
 #include "medrank.h"
 
 MEDRANK::MEDRANK() {
-    num_line_ = -1;
+    num_vector_ = -1;
 
     h_ = l_ = NULL;
     q_ = NULL;
 
     trees_ = NULL;
 
-    num_line_ = -1;
-    dim_line_ = -1;
-    lines_ = NULL;
+    num_vector_ = -1;
+
+    vectors_ = NULL;
     votes_ = NULL;
 
     io_cost_ = 0;
@@ -21,14 +21,14 @@ MEDRANK::~MEDRANK() {
     delete[] q_;
     q_ = NULL;
 
-    for (int i = 0; i < num_line_; i++) {
-        delete[] lines_[i];
+    for (int i = 0; i < num_vector_; i++) {
+        delete[] vectors_[i];
         delete trees_[i];
         delete h_[i];
         delete l_[i];
     }
-    delete[] lines_;
-    lines_ = NULL;
+    delete[] vectors_;
+    vectors_ = NULL;
 
     delete[] trees_;
     trees_ = NULL;
@@ -49,29 +49,28 @@ void MEDRANK::InitVote(int num) {
     votes_ = new int[num];
 };
 
-void MEDRANK::GenLines(int dim_line, int num_line) {
-    num_line_ = num_line;
-    dim_line_ = dim_line;
-    lines_ = new float*[num_line];
+void MEDRANK::GenRandomVectors(int dim_line, int num_line) {
+    num_vector_ = num_line;
+    vectors_ = new float*[num_line];
     for (int i = 0; i < num_line; ++i) {
-        lines_[i] = new float[dim_line];
-        GenRandomVector(dim_line, lines_[i]);
+        vectors_[i] = new float[dim_line];
+        GenRandomVector(dim_line, vectors_[i]);
     }
 }
 
-float* MEDRANK::GetLine(int index) {
-    return lines_[index];
+float* MEDRANK::GetRandomVector(int index) {
+    return vectors_[index];
 }
 
 void MEDRANK::Init(char *output_folder) {
 
-    q_ = new float[num_line_];
+    q_ = new float[num_vector_];
 
     // initial <h_>
-    h_ = new Cursor*[num_line_];
+    h_ = new Cursor*[num_vector_];
 
     // initial <l_>
-    l_ = new Cursor*[num_line_];
+    l_ = new Cursor*[num_vector_];
 
     // initial <trees_>
     char* index_path = new char[strlen(output_folder) + 20];
@@ -80,8 +79,8 @@ void MEDRANK::Init(char *output_folder) {
 
     char* file_name = new char[20];
 
-    trees_ = new BTree*[num_line_];
-    for (int i = 0; i < num_line_; ++i) {
+    trees_ = new BTree*[num_vector_];
+    for (int i = 0; i < num_vector_; ++i) {
         // generate the file name of the b-tree
         GenTreeFileName(i, index_path, file_name);
 
@@ -103,7 +102,9 @@ void MEDRANK::InitCursor() {
     // reset io cost
     io_cost_ = 0;
     // init <h_> and <l_>
-    for (int i = 0; i < num_line_; ++i) {
+    for (int i = 0; i < num_vector_; ++i) {
+        h_[i]->Release();
+        l_[i]->Release();
         io_cost_ += trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
         io_cost_ += trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
     }
@@ -112,8 +113,7 @@ void MEDRANK::InitCursor() {
 int MEDRANK::VoteAndJudge(int candidate) {
     votes_[candidate]++;
     // 如果候选人的票数超过线段数量的一半，返回候选人的号码，否则返回-1
-    if ((float)votes_[candidate] / num_line_ >= MINFREQ) {
-//        printf("%d\n", candidate);
+    if ((float)votes_[candidate] / num_vector_ > MINFREQ) {
         return candidate;
     }
     return -1;
@@ -121,7 +121,7 @@ int MEDRANK::VoteAndJudge(int candidate) {
 
 int MEDRANK::Execute() {
     // 遍历所有线段
-    for (int i = 0; i < num_line_; ++i) {
+    for (int i = 0; i < num_vector_; ++i) {
         float h_dis = FLT_MAX;
         float l_dis = FLT_MAX;
         if (!h_[i]->invalid()) h_dis = q_[i] - h_[i]->projection();
@@ -143,14 +143,14 @@ int MEDRANK::Execute() {
             }
         }
         // next round
-        if (i == num_line_ - 1) i = 0;
+        if (i == num_vector_ - 1) i = 0;
     }
     return -1;
 }
 
 
 int MEDRANK::num_line() {
-    return num_line_;
+    return num_vector_;
 }
 
 void MEDRANK::set_q(int index, float value) {

@@ -105,7 +105,7 @@ BlockFile* BTree::file() const {
 
 // -------------------------------------------------------------------------
 // bulkload b-tree from hash table in mem
-// <num> -- number of entries
+// <num>: number of entries
 void BTree::BulkLoad(Pair* pairs, int num) {
 
     int start_block = -1;
@@ -148,7 +148,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
         }
     }
 
-    // release the space
+    // release space
     delete prev_node;
     prev_node = NULL;
 
@@ -214,7 +214,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
 
 // -------------------------------------------------------------------------
 // get cursor not greater than key
-// <cursor> cursor
+// <cursor>: (return)
 int BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
     int io_cost = 0;
 
@@ -244,17 +244,15 @@ int BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
     int pos = cur_node->FindPositionByKey(key);
 
     // get result
-    cursor->SetValue(cur_node->block(), pos,
-                    cur_node->GetSon(pos), cur_node->GetKey(pos), this);
+    // release space of <cur_node> at Cursor
+    cursor->SetValue(cur_node, pos, this);
 
-    //  Release space
-    delete cur_node;
     root_ptr_ = NULL;
     return io_cost;
 }
 
 // get cursor greater than key
-// <cursor> (return)
+// <cursor>: (return)
 int BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
 
     int io_cost = 0;
@@ -309,11 +307,9 @@ int BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
     }
 
     // get result
-    cursor->SetValue(cur_node->block(), pos,
-                    cur_node->GetSon(pos), cur_node->GetKey(pos), this);
+    // release space of <cur_node> at Cursor
+    cursor->SetValue(cur_node, pos, this);
 
-    //  Release space
-    delete cur_node;
     root_ptr_ = NULL;
     return io_cost;
 }
