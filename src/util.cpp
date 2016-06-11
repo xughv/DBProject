@@ -42,7 +42,7 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     FILE* fp = fopen(file_name, "rb+");
 
     if (!fp) {
-        printf("I could not open %s.\n", file_name);
+        printf("Could not open %s.\n", file_name);
         return false;
     }
 
@@ -59,11 +59,10 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
 
     // check the size of set
     if (!feof(fp) && i == num) {
-        printf("The size of set is larger than you input\n");
-    }
-    else if (feof(fp) && i < num) {
-        printf("Set the size of dataset to be %d. ", i);
-        printf("And try again\n");
+//        printf("The size of set is larger than you input\n");
+    } else if (feof(fp) && i < num) {
+        printf("please set the size of data set to be %d. ", i);
+        return false;
     }
 
     // close data file

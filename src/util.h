@@ -49,13 +49,14 @@ public:
     float projection() const { return pair.projection(); }
     bool invalid() const { return invalid_; }
 
-    // 前缀自加重载
-    Cursor& operator ++() {
-        if (invalid()) return *this;
+    int MoveRight() {
+        int io_cost = 0;
+        if (invalid()) return io_cost;
         int pos = index_;
         BNode* cur_node = new BNode();
 
         cur_node->InitFromFile(tree_, node_block_);
+        io_cost++;
 
         // get the first key which greater than key
         if (pos + 1 < cur_node->num_entries()) {
@@ -67,16 +68,17 @@ public:
             if (block < 0) {
                 // current node don't have right_sibling
                 this->SetInvalid();
-                return *this;
+                return io_cost;
             }
             delete cur_node;
             cur_node = new BNode();
             cur_node->InitFromFile(tree_, block);
+            io_cost++;
 
             if (cur_node->num_entries() < 1) {
                 delete cur_node;
                 this->SetInvalid();
-                return *this;
+                return io_cost;
             }
             // pos at first in right_sibling
             pos = 0;
@@ -84,21 +86,23 @@ public:
 
         // get result
         this->SetValue(cur_node->block(), pos,
-                        cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
+                       cur_node->GetSon(pos), cur_node->GetKey(pos), tree_);
 
         //  Release space
         delete cur_node;
 
-        return *this;
+        return io_cost;
     }
 
-    // 前缀自减重载
-    Cursor& operator --() {
-        if (invalid()) return *this;
+    int MoveLeft() {
+        int io_cost = 0;
+
+        if (invalid()) return io_cost;
         int pos = index_;
         BNode* cur_node = new BNode();
 
         cur_node->InitFromFile(tree_, node_block_);
+        io_cost++;
 
         // get the first key which less than key
         if (pos > 0) {
@@ -110,16 +114,17 @@ public:
             if (block < 0) {
                 // current node don't have left_sibling
                 this->SetInvalid();
-                return *this;
+                return io_cost;
             }
             delete cur_node;
             cur_node = new BNode();
             cur_node->InitFromFile(tree_, block);
+            io_cost++;
 
             if (cur_node->num_entries() < 1) {
                 delete cur_node;
                 this->SetInvalid();
-                return *this;
+                return io_cost;
             }
             // pos at last in left_sibling
             pos = cur_node->num_entries() - 1;
@@ -132,7 +137,7 @@ public:
         //  Release space
         delete cur_node;
 
-        return *this;
+        return io_cost;
     }
 private:
     int node_block_;

@@ -2,7 +2,6 @@
 #include "medrank.h"
 
 MEDRANK::MEDRANK() {
-
     num_line_ = -1;
 
     h_ = l_ = NULL;
@@ -14,6 +13,8 @@ MEDRANK::MEDRANK() {
     dim_line_ = -1;
     lines_ = NULL;
     votes_ = NULL;
+
+    io_cost_ = 0;
 }
 
 MEDRANK::~MEDRANK() {
@@ -42,8 +43,8 @@ MEDRANK::~MEDRANK() {
     votes_ = NULL;
 }
 
+// initial votes
 void MEDRANK::InitVote(int num) {
-    // initial votes
     num_data_ = num;
     votes_ = new int[num];
 };
@@ -95,26 +96,58 @@ void MEDRANK::Init(char *output_folder) {
     delete[] file_name;
 }
 
+// init <h_> and <l_> and reset value
 void MEDRANK::InitCursor() {
-
+    // reset all votes
     memset(votes_, 0, sizeof(int) * num_data_);
-
+    // reset io cost
+    io_cost_ = 0;
+    // init <h_> and <l_>
     for (int i = 0; i < num_line_; ++i) {
-        trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
-        trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
+        io_cost_ += trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
+        io_cost_ += trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
     }
-
 }
 
-int MEDRANK::Vote(int candidate) {
+int MEDRANK::VoteAndJudge(int candidate) {
     votes_[candidate]++;
     // 如果候选人的票数超过线段数量的一半，返回候选人的号码，否则返回-1
-    if (votes_[candidate] >= num_line_/2) {
-        printf("%d\n", candidate);
+    if ((float)votes_[candidate] / num_line_ >= MINFREQ) {
+//        printf("%d\n", candidate);
         return candidate;
     }
     return -1;
 }
+
+int MEDRANK::Execute() {
+    // 遍历所有线段
+    for (int i = 0; i < num_line_; ++i) {
+        float h_dis = FLT_MAX;
+        float l_dis = FLT_MAX;
+        if (!h_[i]->invalid()) h_dis = q_[i] - h_[i]->projection();
+        if (!l_[i]->invalid()) l_dis = l_[i]->projection() - q_[i];
+
+        if (h_dis <= l_dis) {
+            int result = VoteAndJudge(h_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+            io_cost_ += h_[i]->MoveLeft();
+            if (result != -1) {
+                // 已找到
+                return result;
+            }
+        } else {
+            int result = VoteAndJudge(l_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+            io_cost_ += l_[i]->MoveRight();
+            if (result != -1) {
+                // 已找到
+                return result;
+            }
+        }
+        // next round
+        if (i == num_line_ - 1) i = 0;
+    }
+    return -1;
+}
+
 
 int MEDRANK::num_line() {
     return num_line_;
@@ -124,31 +157,6 @@ void MEDRANK::set_q(int index, float value) {
     q_[index] = value;
 }
 
-int MEDRANK::GoGoGo() {
-    // 遍历所有线段
-    for (int i = 0; i < num_line_; ++i) {
-        float h_dis = FLT_MAX;
-        float l_dis = FLT_MAX;
-        if (!h_[i]->invalid()) h_dis = q_[i] - h_[i]->projection();
-        if (!l_[i]->invalid()) l_dis = l_[i]->projection() - q_[i];
-
-        if (h_dis <= l_dis) {
-            int result = Vote(h_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
-            --(*h_[i]);
-            if (result != -1) {
-                // 已找到
-                return result;
-            }
-
-        } else {
-            int result = Vote(l_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
-            ++(*l_[i]);
-            if (result != -1) {
-                // 已找到
-                return result;
-            }
-        }
-        if (i == num_line_ - 1) i = 0;
-    }
-    return -1;
+int MEDRANK::io_cost() {
+    return io_cost_;
 }
