@@ -107,6 +107,7 @@ int MEDRANK::Vote(int candidate) {
     votes_[candidate]++;
     // 如果候选人的票数超过线段数量的一半，返回候选人的号码，否则返回-1
     if (votes_[candidate] >= num_line_/2) {
+        printf("%d\n", candidate);
         return candidate;
     }
     return -1;
@@ -146,7 +147,10 @@ int MEDRANK::GoGoGo() {
                 return result;
             }
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/master
         if (i == num_line_ - 1) i = 0;
     }
     return -1;

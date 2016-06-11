@@ -16,9 +16,9 @@ int main() {
     strcpy(query_set, "data/Mnist.q");
     strcpy(dir, "result/");
 
-    Indexing(num_data, dim, num_line, page_size, data_set, dir);
-    CalcANN(num_query, dim, query_set, dir);
-
+//    Indexing(num_data, dim, num_line, page_size, data_set, dir);
+//    CalcANN(num_query, dim, query_set, dir);
+    LinearScan(num_data, num_query, dim, query_set, data_set);
     delete[] data_set;
     delete[] query_set;
     delete[] dir;
