@@ -37,3 +37,14 @@
 | 0017 | unsigned byte  | ?? | pixel |
 | .... |               |    |       |
 | xxxx | unsigned byte | ?? | pixel |
+
+### 输出结果
+如果有输入输出文件夹-of的参数，则文件夹`index`与一个输出文件`result.out`在指定文件夹下。
+如果无输入-of参数，则文件夹`index`与文件`result.out`在根目录的results文件夹下
+- `index`目录下每一个文件就是一棵树（二进制形式保存）
+- `result.out`用字符形式保存，里前四行分别是
+  - Indexing time：建立索引所需时间
+  - Runing time：一个查询所需时间
+  - IO cost：IO操作的次数
+  - Overall Ratio：误差（越接近1越准确）
+- `result.out`后面的行数表示对应查询用MEDRANK算法得到的数据集里的id
