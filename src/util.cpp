@@ -36,10 +36,10 @@ void GenRandomVector(int dim, float* vec) {
     }
 }
 
-bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
+bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** data) {
 
     // open data file
-    FILE* fp = fopen(file_name, "rb+");
+    FILE* fp = fopen(file_name, "r");
 
     if (!fp) {
         printf("Could not open %s.\n", file_name);
@@ -52,15 +52,13 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas) {
     // read data file
     while (!feof(fp) && i < num) {
         for (int j = 0; j < dim; j++) {
-            fread(&datas[i][j], sizeof(char), 1, fp);
+            fread(&data[i][j], SIZE_CHAR, 1, fp);
         }
         i++;
     }
 
     // check the size of set
-    if (!feof(fp) && i == num) {
-//        printf("The size of set is larger than you input\n");
-    } else if (feof(fp) && i < num) {
+    if (feof(fp) && i < num) {
         printf("please set the size of data set to be %d. ", i);
         return false;
     }
@@ -96,7 +94,7 @@ bool CreateDirectory(const char* path) {
         if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
             tmp_path[tmp_pos] = '\0';
             // check the directory exists or not
-            int exist = access(tmp_path, F_OK);;
+            int exist = access(tmp_path, F_OK);
             if (exist != 0) {
                 // create directory
                 if (mkdir(tmp_path, 0777) != 0) {

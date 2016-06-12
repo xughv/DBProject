@@ -68,6 +68,9 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         // generate the file name of the b-tree
         GenTreeFileName(i, index_path, file_name);
 
+        // delete index file created before
+        remove(file_name);
+
         // -------------------------------------------------------------------------
         // building the B+-tree
         // -------------------------------------------------------------------------
@@ -199,23 +202,23 @@ void LinearScan(int num_data, int num_query, int dim, char* query_set, char* dat
     delete[] db_data;
 }
 
-        // 输出到文件
-        char* file_name = new char[strlen(output_folder) + 20];
-        strcpy(file_name, output_folder);
-        strcat(file_name, "medrank.out");
-
-        // open data file
-        FILE* fp = fopen(file_name, "w");
-
-        if (!fp) {
-            printf("I could not open %s.\n", file_name);
-            return;
-        }
-
-        for (int i = 0; i < num; ++i) {
-            fprintf(fp, "%d\n", result_id[i]);
-        }
-
-        fclose(fp);
-
-        delete[] file_name;
+//        // 输出到文件
+//        char* file_name = new char[strlen(output_folder) + 20];
+//        strcpy(file_name, output_folder);
+//        strcat(file_name, "medrank.out");
+//
+//        // open data file
+//        FILE* fp = fopen(file_name, "w");
+//
+//        if (!fp) {
+//            printf("I could not open %s.\n", file_name);
+//            return;
+//        }
+//
+//        for (int i = 0; i < num; ++i) {
+//            fprintf(fp, "%d\n", result_id[i]);
+//        }
+//
+//        fclose(fp);
+//
+//        delete[] file_name;
