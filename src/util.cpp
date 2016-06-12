@@ -13,7 +13,7 @@
 
 #include "def.h"
 
-// Use Box-Muller method to generate a random variable from 𝑁(0,1).
+// Use Box-Muller method to generate a random variable from N(0,1).
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
     float u2 = (float) rand() / (float) RAND_MAX;
