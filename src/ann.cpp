@@ -123,7 +123,10 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
     // ------------------------------------------------------------------------
     // Write the result in result.out
     // open file result.out
-    FILE* fp = fopen("result.out", "w");
+    char* output_path = new char[strlen(output_folder) + 20];
+    strcpy(output_path, output_folder);
+    strcat(output_path, "result.out");
+    FILE* fp = fopen(output_path, "w");
     if (!fp)  {
         printf("Cannot open output file.\n");
     } else {
@@ -138,6 +141,7 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
 
     // release space
     delete[] index_path;
+    delete[] output_path;
     delete[] file_name;
     delete[] pairs;
 
@@ -199,7 +203,10 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
     // ------------------------------------------------------------------------
     // Write the result in result.out
     // open file result.out
-    FILE* fp = fopen("result.out", "a+");
+    char* output_path = new char[strlen(output_folder) + 20];
+    strcpy(output_path, output_folder);
+    strcat(output_path, "result.out");
+    FILE* fp = fopen(output_path, "a+");
     if (!fp)  {
         printf("Cannot open output file.\n");
     } else {
@@ -219,6 +226,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
         delete[] query_data[i];
     }
     delete[] query_data;
+    delete[] output_path;
 }
 
 
@@ -234,7 +242,7 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
 // <data_set>:       the file path of data set
 // <result_id>:      get the nearest point id
 
-void LinearScan(int num_data, int num_query, int dim, char* query_set, char* data_set, int* result_id) {
+void LinearScan(int num_data, int num_query, int dim, char* query_set, char* data_set, char* output_folder, int* result_id) {
 
     unsigned char** db_data = new unsigned char*[num_data];
     for (int i = 0; i < num_data; i++) {
@@ -279,7 +287,10 @@ void LinearScan(int num_data, int num_query, int dim, char* query_set, char* dat
     // ------------------------------------------------------------------------
     // Write the result in result.out
     // open file result.out
-    FILE* fp = fopen("result.out", "a+");
+    char* output_path = new char[strlen(output_folder) + 20];
+    strcpy(output_path, output_folder);
+    strcat(output_path, "result.out");
+    FILE* fp = fopen(output_path, "a+");
     if (!fp)  {
         printf("Cannot open output file.\n");
     } else {
@@ -307,4 +318,5 @@ void LinearScan(int num_data, int num_query, int dim, char* query_set, char* dat
         delete[] db_data[i];
     }
     delete[] db_data;
+    delete[] output_path;
 }

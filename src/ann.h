@@ -43,6 +43,6 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
 // <query_set>:      the file path of query set
 // <data_set>:       the file path of data set
 // <result_id>:      get the nearest point id
-void LinearScan(int num_data, int num_query, int dim, char* query_set, char* data_set, int* result_id);
+void LinearScan(int num_data, int num_query, int dim, char* query_set, char* data_set, char* output_folder, int* result_id);
 
 #endif // _ANN_H_
