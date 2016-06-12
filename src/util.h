@@ -1,7 +1,9 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
+
 #include <cstdio>
 #include "b_node.h"
+
 // -----------------------------------------------------------------------------
 //  Pair: structure of a set of pairs
 // -----------------------------------------------------------------------------
@@ -112,7 +114,7 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    // MoveRight
+    // MoveLeft
     // Set the cursor left.
     // If there is no block on the left of cursor, set the cursor invalid
     // return the times of IO operation
@@ -174,21 +176,19 @@ public:
     // get invalid
     bool invalid() const { return invalid_; }
 
-
-
 private:
+    BTree* tree_;                  // the b-tree this cursor in
     BNode* node_;                  // the node this cursor point to
-    int pos_;                      // the position of the node
+    int pos_;                      // the position in the node
 
     bool invalid_;                 // if the cursor out of the block, it is invalid
-    BTree* tree_;                  // the btree this cursor in
 };
 
 
-// use Box-Muller method to generate a random variable from 𝑁(0,1).
+// Use Box-Muller method to generate a random variable from N(0,1).
 float Rand();
 
-// get a vector by Box-Muller and then normalize it.
+// Get a vector by Box-Muller and then normalize it.
 void GenRandomVector(int dim, float* vec);
 
 // ----------------------------------------------------------------------------
@@ -213,10 +213,10 @@ void GenRandomVector(int dim, float* vec);
 // <data>:          get the data
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned char** data);
 
-// use multiplication to calculate the projection of a vector on a line
+// Use multiplication to calculate the projection of a vector on a line
 float CalcProjection(int dim, unsigned char* object, float* line);
 
-// use the Euclidean distance to calculate the distance of two point
+// Use the Euclidean distance to calculate the distance of two point
 float CalcPointsDistance(unsigned char* point1, unsigned char* point2, int dim);
 
 // -------------------------------------------------------------------------
@@ -228,7 +228,7 @@ float CalcPointsDistance(unsigned char* point1, unsigned char* point2, int dim);
 // -------------------------------------------------------------------------
 bool CreateDirectory(const char* path);
 
-// generate the index file name
+// Generate the index file name
 void GenTreeFileName(int tree_id, char* path, char* file_name);
 
 #endif // _UTIL_H_

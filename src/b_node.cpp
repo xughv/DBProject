@@ -38,8 +38,8 @@ BNode::~BNode() {
 
 // -------------------------------------------------------------------------
 // Init a new node, which not exist
-// <level> -- level (depth) in b-tree
-// <btree> -- b-tree of this node
+// <level>: level (depth) in b-tree
+// <btree>: b-tree of this node
 void BNode::Init(int level, BTree* btree) {
     level_ = (char)level;
     btree_ = btree;
@@ -63,9 +63,9 @@ void BNode::Init(int level, BTree* btree) {
     delete[] buf;
 }
 
-// load an exist node from disk to init
-// <btree> -- b-tree of this node
-// <block> -- address of file of this node
+// Load an exist node from disk to init
+// <btree>: b-tree of this node
+// <block>: address of file of this node
 void BNode::InitFromFile(BTree* btree, int block) {
 
     btree_ = btree;
@@ -92,8 +92,8 @@ void BNode::InitFromFile(BTree* btree, int block) {
 }
 
 // -------------------------------------------------------------------------
-// read a b-node from buffer
-// <buf> -- store info of a b-node
+// Read a b-node from buffer
+// <buf>: store info of a b-node
 void BNode::ReadFromBuffer(char* buf) {
     int pos = 0;
     // read <level_>
@@ -119,8 +119,8 @@ void BNode::ReadFromBuffer(char* buf) {
     }
 }
 
-// write a b-node into buffer
-// <buf> -- store info of a b-node
+// Write a b-node into buffer
+// <buf>: store info of a b-node
 void BNode::WriteToBuffer(char* buf) {
     int pos = 0;
     // write <level_>
@@ -147,7 +147,7 @@ void BNode::WriteToBuffer(char* buf) {
 }
 
 // -------------------------------------------------------------------------
-// get entry size in b-node
+// Get entry size in b-node
 int BNode::GetEntrySize() {
     return SIZE_FLOAT + SIZE_INT;
 }
@@ -157,7 +157,7 @@ int BNode::GetEntrySize() {
 //  If input entry is smaller than all entry in this node, we'll return -1.
 //  The scan order is from right to left.
 // -----------------------------------------------------------------------------
-// find pos just less than input key
+// Find pos just less than input key
 int BNode::FindPositionByKey(float key) {
     int pos = -1;
     for (int i = num_entries_ - 1; i >= 0; --i) {
@@ -169,7 +169,7 @@ int BNode::FindPositionByKey(float key) {
     return pos;
 }
 
-// get <key_> indexed by <index>
+// Get <key_> indexed by <index>
 float BNode::GetKey(int index) {
     if (index < 0 || index >= num_entries_) {
         // TODO: Error
@@ -177,7 +177,7 @@ float BNode::GetKey(int index) {
     return key_[index];
 }
 
-// get <son_> indexed by <index>
+// Get <son_> indexed by <index>
 int BNode::GetSon(int index) {
     if (index < 0 || index >= num_entries_) {
         // TODO: Error
@@ -186,23 +186,23 @@ int BNode::GetSon(int index) {
 }
 
 // -------------------------------------------------------------------------
-// get header size in b-node
+// Get header size in b-node
 int BNode::GetHeaderSize() {
     return SIZE_CHAR + SIZE_INT * 3;
 }
 
-// get key of this node
+// Get key of this node
 float BNode::GetKeyOfNode() {
     return key_[0];
 }
 
-// whether is full?
+// Whether is full?
 bool BNode::IsFull() {
     return num_entries_ >= capacity_;
 }
 
 // -------------------------------------------------------------------------
-// add new child by key and value of son
+// Add new child by key and value of son
 void BNode::AddNewChild(float key, int son) {
     if (num_entries_ >= capacity_) {
         // TODO: Error
@@ -217,38 +217,38 @@ void BNode::AddNewChild(float key, int son) {
 }
 
 // -------------------------------------------------------------------------
-// get left sibling node
+// Get left sibling node
 int BNode::left_sibling() {
     return left_sibling_;
 }
 
-// get right sibling node
+// Get right sibling node
 int BNode::right_sibling() {
     return right_sibling_;
 }
 
-// set <left_sibling>
+// Set <left_sibling>
 void BNode::set_left_sibling(BNode* node) {
     left_sibling_ = node->block();
 }
 
-// set <right sibling>
+// Set <right sibling>
 void BNode::set_right_sibling(BNode* node) {
     right_sibling_ = node->block();
 }
 
 // -------------------------------------------------------------------------
-// get <block_>
+// Get <block_>
 int BNode::block() const {
     return block_;
 }
 
-// get <num_entries_>
+// Get <num_entries_>
 int BNode::num_entries() const {
     return num_entries_;
 }
 
-// get <level_>
+// Get <level_>
 int BNode::level() const {
     return (int)level_;
 }

@@ -13,7 +13,7 @@
 
 #include "def.h"
 
-// use Box-Muller method to generate a random variable from 𝑁(0,1).
+// Use Box-Muller method to generate a random variable from 𝑁(0,1).
 float Rand() {
     float u1 = (float) rand() / (float) RAND_MAX;
     float u2 = (float) rand() / (float) RAND_MAX;
@@ -23,7 +23,7 @@ float Rand() {
     return x;
 }
 
-// get a vector by Box-Muller and then normalize it.
+// Get a vector by Box-Muller and then normalize it.
 void GenRandomVector(int dim, float* vec) {
     float length = 0.0f;
     for (int i = 0; i < dim; ++i) {
@@ -90,7 +90,7 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned char** data) {
     return true;
 }
 
-// use multiplication to calculate the projection of a vector on a line
+// Use multiplication to calculate the projection of a vector on a line
 float CalcProjection(int dim, unsigned char* object, float* line) {
     float length = 0.0f;
     for (int i = 0; i < dim; ++i) {
@@ -138,7 +138,7 @@ bool CreateDirectory(const char* path) {
 }
 
 
-// generate the index file name
+// Generate the index file name
 void GenTreeFileName(int tree_id, char* path, char* file_name) {
     char* tmp = new char[20];
     strcpy(file_name, path);
@@ -149,7 +149,7 @@ void GenTreeFileName(int tree_id, char* path, char* file_name) {
 }
 
 
-// use the Euclidean distance to calculate the distance of two point
+// Use the Euclidean distance to calculate the distance of two point
 float CalcPointsDistance(unsigned char* point1, unsigned char* point2, int dim) {
     float dis = 0;
     for (int i = 0; i < dim; ++i) {

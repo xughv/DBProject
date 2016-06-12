@@ -22,67 +22,67 @@ public:
     // <btree> -- b-tree of this node
     void Init(int level, BTree* btree);                  
 
-    // load an exist node from disk to init
-    // <btree> -- b-tree of this node
-    // <block> -- address of file of this node
+    // Load an exist node from disk to init
+    // <btree>: b-tree of this node
+    // <block>: address of file of this node
     void InitFromFile(BTree* btree, int block);
 
     // -------------------------------------------------------------------------
-    // read a b-node from buffer
-    // <buf> -- store info of a b-node
+    // Read a b-node from buffer
+    // <buf>: store info of a b-node
     void ReadFromBuffer(char* buf);
 
-    // write a b-node into buffer
-    // <buf> -- store info of a b-node
+    // Write a b-node into buffer
+    // <buf>: store info of a b-node
     void WriteToBuffer(char* buf);
 
     // -------------------------------------------------------------------------
-    // get entry size in b-node
+    // Get entry size in b-node
     int GetEntrySize();
     
-    // find pos just less than input key
+    // Find pos just less than input key
     int FindPositionByKey(float key);
 
-    // get <key_> indexed by <index>
+    // Get <key_> indexed by <index>
     float GetKey(int index);
 
-    // get <son_> indexed by <index>
+    // Get <son_> indexed by <index>
     int GetSon(int index);
     // -------------------------------------------------------------------------
-    // get header size in b-node
+    // Get header size in b-node
     int GetHeaderSize();
 
-    // get key of this node
+    // Get key of this node
     float GetKeyOfNode();
 
-    // whether is full?
+    // Whether is full?
     bool IsFull();
 
     // -------------------------------------------------------------------------
-    // add new child by key and value of son
+    // Add new child by key and value of son
     void AddNewChild(float key, int son);
 
     // -------------------------------------------------------------------------
-    // get left sibling node
+    // Get left sibling node
     int left_sibling();
 
-    // get right sibling node
+    // Get right sibling node
     int right_sibling();
 
-    // set <left_sibling>
+    // Set <left_sibling>
     void set_left_sibling(BNode* node);
 
-    // set <right sibling>
+    // Set <right sibling>
     void set_right_sibling(BNode* node);
 
     // -------------------------------------------------------------------------
-    // get <block_>
+    // Get <block_>
     int block() const;
 
-    // get <num_entries_>
+    // Get <num_entries_>
     int num_entries() const;
 
-    // get <level_>
+    // Get <level_>
     int level() const;
 
 private:

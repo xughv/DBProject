@@ -44,7 +44,7 @@ MEDRANK::~MEDRANK() {
     votes_ = NULL;
 }
 
-// initial votes
+// Initial votes
 void MEDRANK::InitVote(int num) {
     num_data_ = num;
     votes_ = new int[num];
@@ -62,12 +62,12 @@ void MEDRANK::GenRandomVectors(int dim_line, int num_line) {
     }
 }
 
-// get the random vector
+// Get the random vector
 float* MEDRANK::GetRandomVector(int index) {
     return vectors_[index];
 }
 
-// init the MEDRANK
+// Init the MEDRANK
 void MEDRANK::Init(char *output_folder) {
 
     q_ = new float[num_vector_];
@@ -101,7 +101,7 @@ void MEDRANK::Init(char *output_folder) {
     delete[] file_name;
 }
 
-// init <h_> and <l_> and reset value
+// Init <h_> and <l_> and reset value
 void MEDRANK::InitCursor() {
     // reset all votes
     memset(votes_, 0, sizeof(int) * num_data_);
@@ -156,7 +156,6 @@ int MEDRANK::VoteAndJudge(int candidate) {
 // If the l cursor is more near, then the candidate in l get one vote, and the h cursor move right.
 // Do this until found a winner.
 //-----------------------------------------------------------------------------
-
 int MEDRANK::Execute() {
     for (int i = 0; i < num_vector_; ++i) {
         float h_dis = FLT_MAX;
@@ -185,17 +184,17 @@ int MEDRANK::Execute() {
     return -1;
 }
 
-// get number of vector.
+// Get number of vector.
 int MEDRANK::num_line() {
     return num_vector_;
 }
 
-// set the value of query
+// Set the value of query
 void MEDRANK::set_q(int index, float value) {
     q_[index] = value;
 }
 
-// get the cost of IO operation
+// Get the cost of IO operation
 int MEDRANK::io_cost() {
     return io_cost_;
 }

@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------------
 //  BTree: b-tree to index
 // -----------------------------------------------------------------------------
-
+// constructor
 BTree::BTree() {
     root_block_ = -1;
     file_ = NULL;
@@ -31,7 +31,7 @@ BTree::~BTree() {
 }
 
 // -------------------------------------------------------------------------
-// init a new b-tree
+// Init a new b-tree
 void BTree::Init(char* file_name, int block_length) {
 
     file_ = new BlockFile(file_name, block_length);
@@ -49,7 +49,7 @@ void BTree::Init(char* file_name, int block_length) {
     DeleteRoot();
 }
 
-// load an exist b-tree
+// Load an exist b-tree
 void BTree::InitFromFile(char* file_name) {
     // check whether the file exists
     FILE* file = fopen(file_name, "r");
@@ -69,18 +69,18 @@ void BTree::InitFromFile(char* file_name) {
 }
 
 // -------------------------------------------------------------------------
-// read <root> from buffer
+// Read <root> from buffer
 void BTree::ReadRootFromBuffer(char* buf) {
     memcpy(&root_block_, buf, SIZE_INT);
 }
 
-// write <root> into buffer
+// Write <root> into buffer
 void BTree::WriteRootToBuffer(char* buf) {
     memcpy(buf, &root_block_, SIZE_INT);
 }
 
 // -------------------------------------------------------------------------
-// load root of b-tree
+// Load root of b-tree
 BNode* BTree::LoadRoot() {
     if (root_ptr_ == NULL) {
         root_ptr_ = new BNode();
@@ -89,7 +89,7 @@ BNode* BTree::LoadRoot() {
     return root_ptr_;
 }
 
-// delete root of b-tree
+// Delete root of b-tree
 void BTree::DeleteRoot() {
     if (root_ptr_ != NULL) {
         delete root_ptr_;
@@ -98,13 +98,13 @@ void BTree::DeleteRoot() {
 }
 
 // -------------------------------------------------------------------------
-// get <file_>
+// Get <file_>
 BlockFile* BTree::file() const {
     return file_;
 }
 
 // -------------------------------------------------------------------------
-// bulkload b-tree from hash table in mem
+// Bulkload b-tree from hash table in mem
 // <pairs>: 
 // <num>: number of entries
 void BTree::BulkLoad(Pair* pairs, int num) {
@@ -163,7 +163,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
     int last_start_block = start_block;
     int last_end_block   = end_block;
 
-    // Stop consition: lastEndBlock == lastStartBlock (only one node, as root)
+    // when lastEndBlock == lastStartBlock mean it's only one node, as root
     while (last_end_block > last_start_block) {
         first_node = true;
         for (int block = last_start_block; block <= last_end_block; ++block) {
@@ -214,7 +214,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
 }
 
 // -------------------------------------------------------------------------
-// get cursor not greater than key
+// Get cursor not greater than key
 // <cursor>: (return)
 int BTree::Search(float key, Cursor *cursor) {
     int io_cost = 0;

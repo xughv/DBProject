@@ -16,13 +16,13 @@ public:
     // destructor
     ~MEDRANK();
     // ------------------------------------------------------------------------
-    // init the MEDRANK
+    // Init the MEDRANK
     void Init(char *output_folder);
 
-    // init <h_> and <l_> and reset value
+    // Init <h_> and <l_> and reset value
     void InitCursor();
 
-    // initial votes
+    // Initial votes
     void InitVote(int num);
 
     // ------------------------------------------------------------------------
@@ -43,7 +43,7 @@ public:
     // <num_line>:     the number of the line
     void GenRandomVectors(int dim, int num_line);
 
-    // get the random vector
+    // Get the random vector
     float* GetRandomVector(int index);
 
     //-------------------------------------------------------------------------
@@ -56,18 +56,16 @@ public:
 
 
     // ------------------------------------------------------------------------
-    // get number of vector.
+    // Get number of vector.
     int num_line();
 
-    // set the value of query
+    // Set the value of query
     void set_q(int index, float value);
 
-    // get the cost of IO operation
+    // Get the cost of IO operation
     int io_cost();
 
 private:
-    // -------------------------------------------------------------------------
-
     MEDRANK();                      // constructor
 
     Cursor** h_;                    // mark the cursor that no greater than the the projection of query
