@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
             printf("Output Dir  = %s\n", dir);
         }
         else {
-            printf("Parameters error! Some parameters are not exist. \n");
+            printf("Parameters error! Some parameters are invalid. \n");
             printf("Please entry these parameters: -n -d -qn -ds -qs \n");
             return 0;
         }
