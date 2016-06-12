@@ -16,6 +16,9 @@ int main(int argc, char* argv[]) {
     char query_set[20];
     char dir[20];
 
+    strcpy(dir, OUTPUT_DIR_DEFAULT); // 默认输出文件夹
+
+
     bool failed = false;
     int  cnt = 1;
 
@@ -52,6 +55,10 @@ int main(int argc, char* argv[]) {
             strncpy(query_set, argv[++cnt], sizeof(query_set));
             printf("query set = %s\n", query_set);
         }
+        else if (strcmp(argv[cnt], "-of") == 0) {
+            strncpy(dir, argv[++cnt], sizeof(dir));
+            printf("output dir = %s\n", dir);
+        }
         else {
             failed = true;
             printf("Parameters error!\n");
@@ -61,7 +68,6 @@ int main(int argc, char* argv[]) {
     }
     printf("\n");
 
-    strcpy(dir, OUTPUT_DIR_DEFAULT);
     int* result_id = new int[num_query];
 
     Indexing(num_data, dim, num_line, page_size, data_set, dir);
