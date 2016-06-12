@@ -1,4 +1,3 @@
-
 #include "medrank.h"
 
 MEDRANK::MEDRANK() {
@@ -101,12 +100,24 @@ void MEDRANK::InitCursor() {
     memset(votes_, 0, sizeof(int) * num_data_);
     // reset io cost
     io_cost_ = 0;
+
     // init <h_> and <l_>
     for (int i = 0; i < num_vector_; ++i) {
+        // release the node which use last time
         h_[i]->Release();
         l_[i]->Release();
-        io_cost_ += trees_[i]->GetCursorNotGreaterThanKey(q_[i], h_[i]);
-        io_cost_ += trees_[i]->GetCursorGreaterThanKey(q_[i], l_[i]);
+
+        io_cost_ += trees_[i]->Search(q_[i], h_[i]);
+
+        // h_[i] is invalid (less than the min of key in tree)
+        if (h_[i]->invalid()) {
+            float key = trees_[i]->LoadRoot()->GetKeyOfNode();
+            io_cost_ += trees_[i]->Search(key, l_[i]);
+        } else {
+            // l_[i] = h_[i] move right
+            (*l_[i]) = (*h_[i]);
+            io_cost_ += l_[i]->MoveRight() + 1;
+        }
     }
 }
 

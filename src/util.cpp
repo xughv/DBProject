@@ -23,7 +23,7 @@ float Rand() {
 }
 
 void GenRandomVector(int dim, float* vec) {
-    float length = 0;
+    float length = 0.0f;
     for (int i = 0; i < dim; ++i) {
         vec[i] = Rand();
         length += vec[i] * vec[i];
@@ -77,33 +77,33 @@ float CalcProjection(int dim, unsigned* object, float* line) {
 }
 
 bool CreateDirectory(const char* path) {
-//    if (path == NULL) {
-//        return false;
-//    }
-//
-//    char tmp_path[100];
-//    memset(tmp_path, 0, sizeof(tmp_path));
-//
-//    int tmp_pos = 0;
-//    const char* cur_pos = path;
-//
-//    while (*cur_pos++ != '\0') {
-//
-//        tmp_path[tmp_pos++] = *(cur_pos-1);
-//
-//        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
-//            tmp_path[tmp_pos] = '\0';
-//            // check the directory exists or not
-//            int exist = access(tmp_path, F_OK);
-//            if (exist != 0) {
-//                // create directory
-//                if (mkdir(tmp_path, 0777) != 0) {
-//                    // TODO: Error
-//                    return false;
-//                }
-//            }
-//        }
-//    }
+    if (path == NULL) {
+        return false;
+    }
+
+    char tmp_path[100];
+    memset(tmp_path, 0, sizeof(tmp_path));
+
+    int tmp_pos = 0;
+    const char* cur_pos = path;
+
+    while (*cur_pos++ != '\0') {
+
+        tmp_path[tmp_pos++] = *(cur_pos-1);
+
+        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
+            tmp_path[tmp_pos] = '\0';
+            // check the directory exists or not
+            int exist = access(tmp_path, F_OK);
+            if (exist != 0) {
+                // create directory
+                if (mkdir(tmp_path, 0777) != 0) {
+                    // TODO: Error
+                    return false;
+                }
+            }
+        }
+    }
     return true;
 }
 
@@ -121,13 +121,6 @@ float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim) {
     for (int i = 0; i < dim; ++i) {
         dis += (point1[i] - point2[i])*(point1[i] - point2[i]);
     }
-
     dis = sqrtf(dis);
-
     return dis;
-}
-
-int Compare(const void *a , const void *b) {
-//    return (*(Pair **)a)->projection() > (*(Pair **)b)->projection() ? 1 : -1;
-    return ((Pair *)a)->projection() > ((Pair *)b)->projection() ? 1 : -1;
 }

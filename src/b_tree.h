@@ -30,10 +30,11 @@ public:
     // -------------------------------------------------------------------------
     // get cursor not greater than key
     // <cursor>: (return)
-    int GetCursorNotGreaterThanKey(float key, Cursor* cursor);
-    // get cursor greater than key
-    // <cursor>: (return)
-    int GetCursorGreaterThanKey(float key, Cursor* cursor);
+    int Search(float key, Cursor *cursor);
+
+    // -------------------------------------------------------------------------
+    // load root of b-tree
+    BNode* LoadRoot();
 
     // -------------------------------------------------------------------------
     // get <file_>
@@ -53,9 +54,6 @@ private:
     void WriteRootToBuffer(char* buf);
 
     // -------------------------------------------------------------------------
-    // load root of b-tree
-    BNode* LoadRoot();
-
     // delete root of b-tree
     void DeleteRoot();
 

@@ -215,7 +215,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
 // -------------------------------------------------------------------------
 // get cursor not greater than key
 // <cursor>: (return)
-int BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
+int BTree::Search(float key, Cursor *cursor) {
     int io_cost = 0;
 
     BNode* cur_node = LoadRoot();
@@ -247,68 +247,11 @@ int BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
     // release space of <cur_node> at Cursor
     cursor->SetValue(cur_node, pos, this);
 
-    root_ptr_ = NULL;
-    return io_cost;
-}
-
-// get cursor greater than key
-// <cursor>: (return)
-int BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
-
-    int io_cost = 0;
-
-    BNode* cur_node = LoadRoot();
-    io_cost++;
-
-    // search in index nodes
-    while (cur_node->level() > 0) {
-        int pos = cur_node->FindPositionByKey(key);
-        // check whether the key less than min key or not
-        if (pos < 0) {
-            // key less than the min key of the tree
-            if (cur_node->num_entries() <= 0) {
-                // current not has no entry
-                cursor->SetInvalid();
-                return io_cost;
-            }
-            // get the min key of the tree
-            return GetCursorNotGreaterThanKey(cur_node->GetKeyOfNode(), cursor);
-        }
-        // next level
-        int block = cur_node->GetSon(pos);
-
-        delete cur_node;
-        cur_node = new BNode();
-        cur_node->InitFromFile(this, block);
-        io_cost++;
+    if (pos < 0) {
+        // key < min_key of the tree
+        cursor->SetInvalid();
+        return io_cost;
     }
-
-    // search in leaf node
-    int pos = cur_node->FindPositionByKey(key);
-
-    // get the first key which greater than key
-    if (pos + 1 < cur_node->num_entries()) {
-        // in same node
-        pos++;
-    } else {
-        // in right_sibling node
-        int block = cur_node->right_sibling();
-        if (block < 0) {
-            // current node don't have right_sibling
-            cursor->SetInvalid();
-            return false;
-        }
-        //  Release space
-        delete cur_node;
-        cur_node = new BNode();
-        cur_node->InitFromFile(this, block);
-        io_cost++;
-        pos = 0;
-    }
-
-    // get result
-    // release space of <cur_node> at Cursor
-    cursor->SetValue(cur_node, pos, this);
 
     root_ptr_ = NULL;
     return io_cost;

@@ -59,7 +59,7 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
             pairs[j].SetValue(j, CalcProjection(dim, data[j], medrank->GetRandomVector(i)));
         }
         // sort line
-        qsort(pairs, (size_t)num, sizeof(Pair), Compare);
+        qsort(pairs, (size_t)num, sizeof(Pair), Pair::Compare);
 
         end_time = clock();
         gen_lines_time += ((float)end_time - start_time);
