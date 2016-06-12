@@ -15,7 +15,7 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
 
     // 从文件获取数据至data二维数组
     if (!ReadSetFromFile(data_set, num, dim, data)) {
-        printf("Read DataSet-Failed.\n");
+        printf("Read Data-Set Failed.\n");
         return;
     }
 
@@ -188,7 +188,7 @@ void LinearScan(int num_data, int num_query, int dim, char* query_set, char* dat
         overall_ratio += dis / min_dis;
     }
 
-    printf("Overall Ratio: %.6lf\n", overall_ratio / num_query);
+    printf("Overall Ratio: %.6f\n", overall_ratio / num_query);
 
     // release space
     for (int i = 0; i < num_query; i++) {

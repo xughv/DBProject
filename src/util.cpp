@@ -39,7 +39,7 @@ void GenRandomVector(int dim, float* vec) {
 bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** data) {
 
     // open data file
-    FILE* fp = fopen(file_name, "r");
+    FILE* fp = fopen(file_name, "rb");
 
     if (!fp) {
         printf("Could not open %s.\n", file_name);
@@ -59,7 +59,7 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** data) {
 
     // check the size of set
     if (feof(fp) && i < num) {
-        printf("please set the size of data set to be %d. ", i);
+        printf("Please set the size of data set to be %d.\n", i);
         return false;
     }
 
@@ -77,33 +77,33 @@ float CalcProjection(int dim, unsigned* object, float* line) {
 }
 
 bool CreateDirectory(const char* path) {
-    if (path == NULL) {
-        return false;
-    }
-
-    char tmp_path[100];
-    memset(tmp_path, 0, sizeof(tmp_path));
-
-    int tmp_pos = 0;
-    const char* cur_pos = path;
-
-    while (*cur_pos++ != '\0') {
-
-        tmp_path[tmp_pos++] = *(cur_pos-1);
-
-        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
-            tmp_path[tmp_pos] = '\0';
-            // check the directory exists or not
-            int exist = access(tmp_path, F_OK);
-            if (exist != 0) {
-                // create directory
-                if (mkdir(tmp_path, 0777) != 0) {
-                    // TODO: Error
-                    return false;
-                }
-            }
-        }
-    }
+//    if (path == NULL) {
+//        return false;
+//    }
+//
+//    char tmp_path[100];
+//    memset(tmp_path, 0, sizeof(tmp_path));
+//
+//    int tmp_pos = 0;
+//    const char* cur_pos = path;
+//
+//    while (*cur_pos++ != '\0') {
+//
+//        tmp_path[tmp_pos++] = *(cur_pos-1);
+//
+//        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
+//            tmp_path[tmp_pos] = '\0';
+//            // check the directory exists or not
+//            int exist = access(tmp_path, F_OK);
+//            if (exist != 0) {
+//                // create directory
+//                if (mkdir(tmp_path, 0777) != 0) {
+//                    // TODO: Error
+//                    return false;
+//                }
+//            }
+//        }
+//    }
     return true;
 }
 
