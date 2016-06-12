@@ -28,6 +28,7 @@ public:
     // -------------------------------------------------------------------------
     // Get cursor not greater than key
     // <cursor>: (return)
+    // return: IO Cost
     int Search(float key, Cursor *cursor);
 
     // -------------------------------------------------------------------------
@@ -41,8 +42,8 @@ public:
 private:
     // -------------------------------------------------------------------------
     int root_block_;                // address of disk for root
-    BlockFile* file_;               // file in disk to store
     BNode* root_ptr_;               // pointer of root
+    BlockFile* file_;               // file in disk to store
 
     // -------------------------------------------------------------------------
     // Read <root> from buffer

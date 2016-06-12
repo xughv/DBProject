@@ -78,7 +78,7 @@ public:
     // MoveRight
     // Set the cursor right.
     // If there is no block on the right of cursor, set the cursor invalid
-    // return the times of IO operation
+    // return: IO Cost
     // ------------------------------------------------------------------------
     int MoveRight() {
         int io_cost = 0;
@@ -117,7 +117,7 @@ public:
     // MoveLeft
     // Set the cursor left.
     // If there is no block on the left of cursor, set the cursor invalid
-    // return the times of IO operation
+    // return: IO Cost
     // ------------------------------------------------------------------------
     int MoveLeft() {
         int io_cost = 0;

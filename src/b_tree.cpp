@@ -216,6 +216,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
 // -------------------------------------------------------------------------
 // Get cursor not greater than key
 // <cursor>: (return)
+// return: IO Cost
 int BTree::Search(float key, Cursor *cursor) {
     int io_cost = 0;
 

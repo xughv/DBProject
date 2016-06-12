@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
         }
         else if (strcmp(argv[cnt], "-of") == 0) {
             strncpy(dir, argv[++cnt], sizeof(dir));
-            printf("Output Dir  = %s\n", dir);
+            printf("Output Dir  = %s\n\n", dir);
         }
         else {
             printf("Parameters error! Some parameters are invalid. \n");
@@ -61,10 +61,12 @@ int main(int argc, char* argv[]) {
     int* result_id = new int[num_query];
 
     Indexing(num_data, dim, num_line, page_size, data_set, dir);
+
     CalcANN(num_query, dim, query_set, dir, result_id);
+
     LinearScan(num_data, num_query, dim, query_set, data_set, dir, result_id);
 
-
     delete[] result_id;
+
     return 0;
 }
