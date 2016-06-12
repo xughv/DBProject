@@ -47,6 +47,7 @@ public:
     }
 
     void SetInvalid() {
+        Release();
         invalid_ = true;
     }
 

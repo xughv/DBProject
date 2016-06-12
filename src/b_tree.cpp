@@ -227,6 +227,7 @@ int BTree::Search(float key, Cursor *cursor) {
         // check whether the key less than min key or not
         if (pos < 0) {
             // key < min_key of the tree
+            root_ptr_ = NULL;
             cursor->SetInvalid();
             return io_cost;
         }
@@ -246,12 +247,6 @@ int BTree::Search(float key, Cursor *cursor) {
     // get result
     // release space of <cur_node> at Cursor
     cursor->SetValue(cur_node, pos, this);
-
-    if (pos < 0) {
-        // key < min_key of the tree
-        cursor->SetInvalid();
-        return io_cost;
-    }
 
     root_ptr_ = NULL;
     return io_cost;
