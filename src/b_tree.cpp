@@ -16,7 +16,6 @@ BTree::BTree() {
 
 // destructor                      
 BTree::~BTree() {
-
     if (file_ != NULL) {
         char* header = new char[file_->block_length()];
         WriteRootToBuffer(header);
@@ -82,11 +81,12 @@ void BTree::WriteRootToBuffer(char* buf) {
 
 // -------------------------------------------------------------------------
 // load root of b-tree
-void BTree::LoadRoot() {
+BNode* BTree::LoadRoot() {
     if (root_ptr_ == NULL) {
         root_ptr_ = new BNode();
         root_ptr_->InitFromFile(this, root_block_);
     }
+    return root_ptr_;
 }
 
 // delete root of b-tree
@@ -105,7 +105,7 @@ BlockFile* BTree::file() const {
 
 // -------------------------------------------------------------------------
 // bulkload b-tree from hash table in mem
-// <num> -- number of entries
+// <num>: number of entries
 void BTree::BulkLoad(Pair* pairs, int num) {
 
     int start_block = -1;
@@ -148,7 +148,7 @@ void BTree::BulkLoad(Pair* pairs, int num) {
         }
     }
 
-    // release the space
+    // release space
     delete prev_node;
     prev_node = NULL;
 
@@ -214,10 +214,12 @@ void BTree::BulkLoad(Pair* pairs, int num) {
 
 // -------------------------------------------------------------------------
 // get cursor not greater than key
-// cursor (return)
-bool BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
-    LoadRoot();
-    BNode* cur_node = root_ptr_;
+// <cursor>: (return)
+int BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
+    int io_cost = 0;
+
+    BNode* cur_node = LoadRoot();
+    io_cost++;
 
     // search in index nodes
     while (cur_node->level() > 0) {
@@ -226,7 +228,7 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
         if (pos < 0) {
             // key < min_key of the tree
             cursor->SetInvalid();
-            return false;
+            return io_cost;
         }
         // next level
         int block = cur_node->GetSon(pos);
@@ -235,26 +237,28 @@ bool BTree::GetCursorNotGreaterThanKey(float key, Cursor* cursor) {
 
         cur_node = new BNode();
         cur_node->InitFromFile(this, block);
+        io_cost++;
     }
 
     // search in leaf node
     int pos = cur_node->FindPositionByKey(key);
 
     // get result
-    cursor->SetValue(cur_node->block(), pos,
-                    cur_node->GetSon(pos), cur_node->GetKey(pos), this);
+    // release space of <cur_node> at Cursor
+    cursor->SetValue(cur_node, pos, this);
 
-    //  Release space
-    delete cur_node;
     root_ptr_ = NULL;
-    return true;
+    return io_cost;
 }
 
 // get cursor greater than key
-// cursor (return)
-bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
-    LoadRoot();
-    BNode* cur_node = root_ptr_;
+// <cursor>: (return)
+int BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
+
+    int io_cost = 0;
+
+    BNode* cur_node = LoadRoot();
+    io_cost++;
 
     // search in index nodes
     while (cur_node->level() > 0) {
@@ -265,7 +269,7 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
             if (cur_node->num_entries() <= 0) {
                 // current not has no entry
                 cursor->SetInvalid();
-                return false;
+                return io_cost;
             }
             // get the min key of the tree
             return GetCursorNotGreaterThanKey(cur_node->GetKeyOfNode(), cursor);
@@ -276,6 +280,7 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
         delete cur_node;
         cur_node = new BNode();
         cur_node->InitFromFile(this, block);
+        io_cost++;
     }
 
     // search in leaf node
@@ -297,16 +302,14 @@ bool BTree::GetCursorGreaterThanKey(float key, Cursor* cursor) {
         delete cur_node;
         cur_node = new BNode();
         cur_node->InitFromFile(this, block);
-
+        io_cost++;
         pos = 0;
     }
 
     // get result
-    cursor->SetValue(cur_node->block(), pos,
-                    cur_node->GetSon(pos), cur_node->GetKey(pos), this);
+    // release space of <cur_node> at Cursor
+    cursor->SetValue(cur_node, pos, this);
 
-    //  Release space
-    delete cur_node;
     root_ptr_ = NULL;
-    return true;
+    return io_cost;
 }

@@ -7,10 +7,6 @@
 
 class BNode;
 
-// -----------------------------------------------------------------------------
-//  BTree: b-tree to index ...
-// -----------------------------------------------------------------------------
-
 class BTree {
 public:
     // constructor
@@ -28,16 +24,16 @@ public:
 
     // -------------------------------------------------------------------------
     // bulkload b-tree from hash table in mem
-    // <num> -- number of entries
+    // <num>: number of entries
     void BulkLoad(Pair* pairs, int num);
 
     // -------------------------------------------------------------------------
     // get cursor not greater than key
-    // cursor (return)
-    bool GetCursorNotGreaterThanKey(float key, Cursor* cursor);
+    // <cursor>: (return)
+    int GetCursorNotGreaterThanKey(float key, Cursor* cursor);
     // get cursor greater than key
-    // cursor (return)
-    bool GetCursorGreaterThanKey(float key, Cursor* cursor);
+    // <cursor>: (return)
+    int GetCursorGreaterThanKey(float key, Cursor* cursor);
 
     // -------------------------------------------------------------------------
     // get <file_>
@@ -58,7 +54,7 @@ private:
 
     // -------------------------------------------------------------------------
     // load root of b-tree
-    void LoadRoot();
+    BNode* LoadRoot();
 
     // delete root of b-tree
     void DeleteRoot();

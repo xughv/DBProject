@@ -21,18 +21,20 @@ public:
 
     void InitVote(int num);
 
-    int GoGoGo();
+    int Execute();
 
-    void GenLines(int dim, int num_line);
+    void GenRandomVectors(int dim, int num_line);
 
-    float* GetLine(int index);
+    float* GetRandomVector(int index);
 
-    int Vote(int candidate);
+    int VoteAndJudge(int candidate);
+
 
     int num_line();
 
     void set_q(int index, float value);
 
+    int io_cost();
 
 private:
     // constructor
@@ -44,13 +46,14 @@ private:
     float* q_;
     BTree** trees_;
 
-    int num_line_;
-    int dim_line_;
+    int num_vector_;
 
-    float** lines_;
+    float** vectors_;
 
     int* votes_;
     int num_data_;
+
+    int io_cost_;
 };
 
 #endif // _MEDRANK_H_

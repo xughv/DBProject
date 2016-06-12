@@ -19,6 +19,9 @@ const int BFHEAD_LENGTH = (int) (sizeof(int) * 2);
 // default page size
 const int PAGE_SIZE_DEFAULT = 1024;
 
+// default number of random lines
+const int NUM_RANDOM_LINE_DEFAULT = 50;
+
 // default output dir
 const char OUTPUT_DIR_DEFAULT[] = "results/";
 
@@ -32,4 +35,5 @@ const size_t SIZE_FLOAT = sizeof(float);
 
 const float FLOAT_MIN = 0 - FLT_MAX;
 
+const float MINFREQ = 0.5f;
 #endif // _DEF_H_
