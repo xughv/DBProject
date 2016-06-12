@@ -158,7 +158,7 @@ void LinearScan(int num_data, int num_query, int dim, char* query_set, char* dat
     unsigned **q_data = new unsigned *[num_query];
     for (int i = 0; i < num_query; i++) {
         q_data[i] = new unsigned[dim];
-        memset(q_data[i], 0, sizeof(q_data[i]) * dim);
+        memset(q_data[i], 0, sizeof(unsigned) * dim);
     }
 
     if (!ReadSetFromFile(query_set, num_query, dim, q_data)) {

@@ -105,6 +105,7 @@ BlockFile* BTree::file() const {
 
 // -------------------------------------------------------------------------
 // bulkload b-tree from hash table in mem
+// <pairs>: 
 // <num>: number of entries
 void BTree::BulkLoad(Pair* pairs, int num) {
 
@@ -247,6 +248,11 @@ int BTree::Search(float key, Cursor *cursor) {
     // get result
     // release space of <cur_node> at Cursor
     cursor->SetValue(cur_node, pos, this);
+
+    // only leaf node
+    if (pos < 0) {
+        cursor->SetInvalid();
+    }
 
     root_ptr_ = NULL;
     return io_cost;
