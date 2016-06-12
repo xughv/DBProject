@@ -155,7 +155,7 @@ float Rand();
 
 void GenRandomVector(int dim, float* vec);
 
-bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** datas);
+bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** data);
 
 float CalcProjection(int dim, unsigned* object, float* line);
 
