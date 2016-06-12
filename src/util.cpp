@@ -8,8 +8,10 @@
 #include <cstring>
 #include <cstdlib>
 #include <cmath>
-
+#include <unistd.h>
+#include <stdarg.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #include "def.h"
 
