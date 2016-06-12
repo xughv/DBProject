@@ -165,11 +165,11 @@ float Rand();
 
 void GenRandomVector(int dim, float* vec);
 
-bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** data);
+bool ReadSetFromFile(char* file_name, int num, int dim, unsigned char** data);
 
-float CalcProjection(int dim, unsigned* object, float* line);
+float CalcProjection(int dim, unsigned char* object, float* line);
 
-float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim);
+float CalcPointsDistance(unsigned char* point1, unsigned char* point2, int dim);
 
 bool CreateDirectory(const char* path);
 

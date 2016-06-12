@@ -5,10 +5,10 @@
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
     // 新建data数据unsigned型二维数组
-    unsigned** data = new unsigned*[num];
+    unsigned char** data = new unsigned char*[num];
     for (int i = 0; i < num; i++) {
-        data[i] = new unsigned[dim];
-        memset(data[i], 0, sizeof(unsigned) * dim);
+        data[i] = new unsigned char[dim];
+        memset(data[i], 0, sizeof(unsigned char) * dim);
     }
 
     clock_t start_time = clock();
@@ -103,11 +103,11 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
 
 void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result_id) {
 
-    unsigned **query_data = new unsigned *[num];
+    unsigned char**query_data = new unsigned char*[num];
 
     for (int i = 0; i < num; i++) {
-        query_data[i] = new unsigned[dim];
-        memset(query_data[i], 0, sizeof(unsigned) * dim);
+        query_data[i] = new unsigned char[dim];
+        memset(query_data[i], 0, sizeof(unsigned char) * dim);
     }
 
     if (!ReadSetFromFile(query_set, num, dim, query_data)) {
@@ -149,16 +149,16 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
 
 void LinearScan(int num_data, int num_query, int dim, char* query_set, char* data_set, int* result_id) {
 
-    unsigned** db_data = new unsigned*[num_data];
+    unsigned char** db_data = new unsigned char*[num_data];
     for (int i = 0; i < num_data; i++) {
-        db_data[i] = new unsigned[dim];
-        memset(db_data[i], 0, sizeof(unsigned) * dim);
+        db_data[i] = new unsigned char[dim];
+        memset(db_data[i], 0, sizeof(unsigned char) * dim);
     }
 
-    unsigned **q_data = new unsigned *[num_query];
+    unsigned char **q_data = new unsigned char *[num_query];
     for (int i = 0; i < num_query; i++) {
-        q_data[i] = new unsigned[dim];
-        memset(q_data[i], 0, sizeof(unsigned) * dim);
+        q_data[i] = new unsigned char[dim];
+        memset(q_data[i], 0, sizeof(unsigned char) * dim);
     }
 
     if (!ReadSetFromFile(query_set, num_query, dim, q_data)) {

@@ -36,7 +36,7 @@ void GenRandomVector(int dim, float* vec) {
     }
 }
 
-bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** data) {
+bool ReadSetFromFile(char* file_name, int num, int dim, unsigned char** data) {
 
     // open data file
     FILE* fp = fopen(file_name, "rb");
@@ -68,7 +68,7 @@ bool ReadSetFromFile(char* file_name, int num, int dim, unsigned** data) {
     return true;
 }
 
-float CalcProjection(int dim, unsigned* object, float* line) {
+float CalcProjection(int dim, unsigned char* object, float* line) {
     float length = 0.0f;
     for (int i = 0; i < dim; ++i) {
         length += (float)object[i] * line[i];
@@ -77,33 +77,33 @@ float CalcProjection(int dim, unsigned* object, float* line) {
 }
 
 bool CreateDirectory(const char* path) {
-    if (path == NULL) {
-        return false;
-    }
-
-    char tmp_path[100];
-    memset(tmp_path, 0, sizeof(tmp_path));
-
-    int tmp_pos = 0;
-    const char* cur_pos = path;
-
-    while (*cur_pos++ != '\0') {
-
-        tmp_path[tmp_pos++] = *(cur_pos-1);
-
-        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
-            tmp_path[tmp_pos] = '\0';
-            // check the directory exists or not
-            int exist = access(tmp_path, F_OK);
-            if (exist != 0) {
-                // create directory
-                if (mkdir(tmp_path, 0777) != 0) {
-                    // TODO: Error
-                    return false;
-                }
-            }
-        }
-    }
+//    if (path == NULL) {
+//        return false;
+//    }
+//
+//    char tmp_path[100];
+//    memset(tmp_path, 0, sizeof(tmp_path));
+//
+//    int tmp_pos = 0;
+//    const char* cur_pos = path;
+//
+//    while (*cur_pos++ != '\0') {
+//
+//        tmp_path[tmp_pos++] = *(cur_pos-1);
+//
+//        if ((*cur_pos == '/' || *cur_pos == '\0') && strlen(tmp_path) > 0) {
+//            tmp_path[tmp_pos] = '\0';
+//            // check the directory exists or not
+//            int exist = access(tmp_path, F_OK);
+//            if (exist != 0) {
+//                // create directory
+//                if (mkdir(tmp_path, 0777) != 0) {
+//                    // TODO: Error
+//                    return false;
+//                }
+//            }
+//        }
+//    }
     return true;
 }
 
@@ -116,10 +116,10 @@ void GenTreeFileName(int tree_id, char* path, char* file_name) {
     delete[] tmp;
 }
 
-float CalcPointsDistance(unsigned* point1, unsigned* point2, int dim) {
+float CalcPointsDistance(unsigned char* point1, unsigned char* point2, int dim) {
     float dis = 0;
     for (int i = 0; i < dim; ++i) {
-        dis += (point1[i] - point2[i])*(point1[i] - point2[i]);
+        dis += ((float)point1[i] - point2[i])*(point1[i] - point2[i]);
     }
     dis = sqrtf(dis);
     return dis;
