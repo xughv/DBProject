@@ -2,37 +2,70 @@
 #include <cstdlib>
 #include <ctime>
 
+// -----------------------------------------------------------------------------
+// ALGORITHM 1 : Indexing
+//  1) Projects the objects on m random lines {L 1 ,L 2 ,...,L m }
+//  2) Indexes the objects on each lines with a B+tree.
+// -----------------------------------------------------------------------------
+// <num>:            the number of data set
+// <dim>:            the dimension of data set
+// <num_line>:       the number of line
+// <page_size>:      one page size, here default is 1KB
+// <data_set>:       the file path of data set
+// <output_folder>:  the path of output
 void Indexing(int num, int dim, int num_line, int page_size, char* data_set, char* output_folder) {
 
-    // 新建data数据unsigned型二维数组
+    // Init the data set.
     unsigned char** data = new unsigned char*[num];
     for (int i = 0; i < num; i++) {
         data[i] = new unsigned char[dim];
         memset(data[i], 0, sizeof(unsigned char) * dim);
     }
 
+    // Mark the start time of read the file.
     clock_t start_time = clock();
 
-    // 从文件获取数据至data二维数组
+    // -------------------------------------------------------------------------
+    // ReadSetFromFile
+    // Open the file of <data_set> and read the data into <data>
+    // If the file not exist, return false.
+    // -------------------------------------------------------------------------
     if (!ReadSetFromFile(data_set, num, dim, data)) {
         printf("Read Data-Set Failed.\n");
         return;
     }
 
+    // Mark the end time of read the file.
     clock_t end_time = clock();
+
+    // Printf the time of read the file.
     printf ("Read Dataset: %.6f sec\n", ((float)end_time - start_time) / CLOCKS_PER_SEC);
 
-    // 构建路径名称
+    // Set the index output path. In the results/index/
     char* index_path = new char[strlen(output_folder) + 20];
     strcpy(index_path, output_folder);
     strcat(index_path, "index/");
 
+    // -------------------------------------------------------------------------
+    // CreateDirectory
+    // Create a directory "results/index/".
+    // In the Linux and OS X system can use the API in CreateDirectory function.
+    // But not in Windows system, so, if you want to run the application in
+    // windows, you can create the folder "results/index/" by yourself and comment
+    // the function CreateDirectory.
+    // -------------------------------------------------------------------------
     if (!CreateDirectory(index_path)) {
         printf("Create Directory Failed.\n");
         return;
     }
 
+    // Get the instance of medrank.
     MEDRANK* medrank = MEDRANK::GetInstance();
+
+    // -------------------------------------------------------------------------
+    // InitVote
+    // <num>: the number of candidate
+    // -------------------------------------------------------------------------
     medrank->InitVote(num);
     // -------------------------------------------------------------------------
     start_time = clock();
@@ -101,6 +134,19 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
     delete[] data;
 }
 
+
+// -----------------------------------------------------------------------------
+// ALGORITHM 2: MEDRANK
+//  1) Init the projection of query set on m random lines {L 1 ,L 2 ,...,L m }
+//  2) Init the h cursor and the l cursor in the B+tree.
+//  3) Execute the medrank and get the nearest point.
+// -----------------------------------------------------------------------------
+// <num>:            the number of query set
+// <dim>:            the dimension of query set
+// <query_set>:      the file path of query set
+// <output_folder>:  the path of output
+// <result_id>:      get the nearest point id
+
 void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result_id) {
 
     unsigned char**query_data = new unsigned char*[num];
@@ -121,9 +167,9 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
     int io_cost = 0;
     float running_time = 0.0f;
 
-    // 初始化查询条件的投影
+    // Init the projection of query set
     for (int i = 0; i < num; ++i) {
-        // set current q
+        // Set current q
         for (int j = 0; j < medrank->num_line(); ++j) {
             medrank->set_q(j, CalcProjection(dim, query_data[i], medrank->GetRandomVector(j)));
         }
@@ -146,6 +192,19 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
     }
     delete[] query_data;
 }
+
+
+
+// -----------------------------------------------------------------------------
+// LinearScan
+// Just use violent search to find out the nearest point.
+// -----------------------------------------------------------------------------
+// <num_data>:       the number of data set
+// <num_query>:      the number of query set
+// <dim>:            the dimension of query set and data set
+// <query_set>:      the file path of query set
+// <data_set>:       the file path of data set
+// <result_id>:      get the nearest point id
 
 void LinearScan(int num_data, int num_query, int dim, char* query_set, char* data_set, int* result_id) {
 
@@ -201,24 +260,3 @@ void LinearScan(int num_data, int num_query, int dim, char* query_set, char* dat
     }
     delete[] db_data;
 }
-
-//        // 输出到文件
-//        char* file_name = new char[strlen(output_folder) + 20];
-//        strcpy(file_name, output_folder);
-//        strcat(file_name, "medrank.out");
-//
-//        // open data file
-//        FILE* fp = fopen(file_name, "w");
-//
-//        if (!fp) {
-//            printf("I could not open %s.\n", file_name);
-//            return;
-//        }
-//
-//        for (int i = 0; i < num; ++i) {
-//            fprintf(fp, "%d\n", result_id[i]);
-//        }
-//
-//        fclose(fp);
-//
-//        delete[] file_name;

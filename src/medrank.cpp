@@ -1,5 +1,6 @@
 #include "medrank.h"
 
+// constructor
 MEDRANK::MEDRANK() {
     num_vector_ = -1;
 
@@ -16,6 +17,7 @@ MEDRANK::MEDRANK() {
     io_cost_ = 0;
 }
 
+// destructor
 MEDRANK::~MEDRANK() {
     delete[] q_;
     q_ = NULL;
@@ -48,6 +50,9 @@ void MEDRANK::InitVote(int num) {
     votes_ = new int[num];
 };
 
+// Generate the random line
+// <dim_line>:     the dimension of the line
+// <num_line>:     the number of the line
 void MEDRANK::GenRandomVectors(int dim_line, int num_line) {
     num_vector_ = num_line;
     vectors_ = new float*[num_line];
@@ -57,10 +62,12 @@ void MEDRANK::GenRandomVectors(int dim_line, int num_line) {
     }
 }
 
+// get the random vector
 float* MEDRANK::GetRandomVector(int index) {
     return vectors_[index];
 }
 
+// init the MEDRANK
 void MEDRANK::Init(char *output_folder) {
 
     q_ = new float[num_vector_];
@@ -121,17 +128,36 @@ void MEDRANK::InitCursor() {
     }
 }
 
+//-----------------------------------------------------------------------------
+// Vote and judge
+// If the candidate has more than the half of the number of line, then the
+// candidate win.
+// If there a candidate win, return the id of the candidate
+// else return -1.
+//-----------------------------------------------------------------------------
+// <candidate>:  the id of candidate
 int MEDRANK::VoteAndJudge(int candidate) {
     votes_[candidate]++;
-    // 如果候选人的票数超过线段数量的一半，返回候选人的号码，否则返回-1
+    // If the candidate has more than the half of the number of line return its id
     if ((float)votes_[candidate] / num_vector_ > MINFREQ) {
         return candidate;
     }
+    // else return -1 (in this time no candidate win)
     return -1;
 }
 
+//-----------------------------------------------------------------------------
+// Execute
+// For every random line. Get one point nearest the query (on the projection),
+// it maybe the h cursor or the l cursor.
+// Calculate the distance of them between query.
+// And then the nearest candidate get one vote.
+// If the h cursor is more near, then the candidate in h get one vote, and the h cursor move left.
+// If the l cursor is more near, then the candidate in l get one vote, and the h cursor move right.
+// Do this until found a winner.
+//-----------------------------------------------------------------------------
+
 int MEDRANK::Execute() {
-    // 遍历所有线段
     for (int i = 0; i < num_vector_; ++i) {
         float h_dis = FLT_MAX;
         float l_dis = FLT_MAX;
@@ -139,17 +165,17 @@ int MEDRANK::Execute() {
         if (!l_[i]->invalid()) l_dis = l_[i]->projection() - q_[i];
 
         if (h_dis <= l_dis) {
-            int result = VoteAndJudge(h_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+            int result = VoteAndJudge(h_[i]->id()); // If there a candidate win, return the id of the candidate
             io_cost_ += h_[i]->MoveLeft();
             if (result != -1) {
-                // 已找到
+                // Have found a winner.
                 return result;
             }
         } else {
-            int result = VoteAndJudge(l_[i]->id()); // 如果有票数过半的候选人就返回候选人，否则返回-1
+            int result = VoteAndJudge(l_[i]->id()); // If there a candidate win, return the id of the candidate
             io_cost_ += l_[i]->MoveRight();
             if (result != -1) {
-                // 已找到
+                // Have found a winner.
                 return result;
             }
         }
@@ -159,15 +185,17 @@ int MEDRANK::Execute() {
     return -1;
 }
 
-
+// get number of vector.
 int MEDRANK::num_line() {
     return num_vector_;
 }
 
+// set the value of query
 void MEDRANK::set_q(int index, float value) {
     q_[index] = value;
 }
 
+// get the cost of IO operation
 int MEDRANK::io_cost() {
     return io_cost_;
 }
