@@ -120,6 +120,19 @@ void Indexing(int num, int dim, int num_line, int page_size, char* data_set, cha
         // -------------------------------------------------------------------------
     }
 
+    // ------------------------------------------------------------------------
+    // Write the result in result.out
+    // open file result.out
+    FILE* fp = fopen("result.out", "w");
+    if (!fp)  {
+        printf("Cannot open output file.\n");
+    } else {
+        fprintf(fp, "Indexing Time: %.6f sec\n", index_time / CLOCKS_PER_SEC);
+    }
+    fclose(fp);
+
+    //-------------------------------------------------------------------------
+
     printf("Prepare Random Lines Time: %.6f sec\n\n", gen_lines_time / CLOCKS_PER_SEC);
     printf("Indexing Time: %.6f sec\n", index_time / CLOCKS_PER_SEC);
 
@@ -182,6 +195,21 @@ void CalcANN(int num, int dim, char* query_set, char* output_folder, int* result
         clock_t end_time = clock();
         running_time += ((float)end_time - start_time) / CLOCKS_PER_SEC;
     }
+
+    // ------------------------------------------------------------------------
+    // Write the result in result.out
+    // open file result.out
+    FILE* fp = fopen("result.out", "a+");
+    if (!fp)  {
+        printf("Cannot open output file.\n");
+    } else {
+        fprintf(fp, "Running Time:  %.6f sec\n", running_time / num);
+        fprintf(fp, "IO Cost:       %d times\n", io_cost / num);
+    }
+
+    fclose(fp);
+
+    //-------------------------------------------------------------------------
 
     printf("Running Time:  %.6f sec\n", running_time / num);
     printf("IO Cost:       %d times\n", io_cost / num);
@@ -246,6 +274,26 @@ void LinearScan(int num_data, int num_query, int dim, char* query_set, char* dat
         // calc the overall ratio
         overall_ratio += dis / min_dis;
     }
+
+
+    // ------------------------------------------------------------------------
+    // Write the result in result.out
+    // open file result.out
+    FILE* fp = fopen("result.out", "a+");
+    if (!fp)  {
+        printf("Cannot open output file.\n");
+    } else {
+        fprintf(fp, "Overall Ratio: %.6f\n\n", overall_ratio / num_query);
+        fprintf(fp, "The MEDRANK result:\n");
+    }
+
+    for (int i = 0; i < num_query; ++i) {
+        fprintf(fp, "#%-3d: id = %d\n", i, result_id[i]);
+    }
+
+    fclose(fp);
+
+    //-------------------------------------------------------------------------
 
     printf("Overall Ratio: %.6f\n", overall_ratio / num_query);
 
