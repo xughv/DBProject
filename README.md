@@ -1,8 +1,8 @@
 # DBProject
 
 ### 编译
-我们已经在根目录下编写好了Makefile文件，所以你可以在根目录下简单地使用`make`指令编译此程序。
-**注意：** 程序默认使用的编译环境是`g++ -std=c++11 -w -O3`，可在Linux，OS X系统上编译并运行。
+我们已经在根目录下编写好了`Makefile`文件，所以你可以在根目录下简单地使用`make`指令编译此程序。
+**注意：** 程序默认使用的编译环境是`g++ -std=c++11`，可在Linux，OS X系统上编译并运行。
 
 ### 使用方法
 | 参数 | 类型 | 描述 |必须|
@@ -16,12 +16,12 @@
 
 
 **Option 0:** 
-结果输出到默认目录（根目录下的results文件夹）
+结果输出到默认目录（当前目录下的results文件夹）
 
 `./medrank -n 60000 -d 784 -qn 100 -ds ./data/Mnist.ds -qs ./data/Mnist.q`
 
 **Option 1:** 
-结果输出到自定义目录（根目录下的output文件夹）
+结果输出到自定义目录（当前目录下的output文件夹）
 
 `./medrank -n 60000 -d 784 -qn 100 -ds ./data/Mnist.ds -qs ./data/Mnist.q -of output/`
 ### 数据的格式
